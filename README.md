@@ -6,6 +6,20 @@
 
 When run, this command line interface automatically generates a new [GitHub Release](https://help.github.com/articles/creating-releases/) and populates it with the changes made since the last release.
 
+## Usage
+
+Install the package:
+
+```bash
+$ npm install -g release
+```
+
+Run the command inside your project's directory:
+
+```bash
+$ release
+``
+
 ## Why?
 
 As we at [ZEIT](https://github.com/zeit) moved all of our GitHub repositories from keeping a `HISTORY.md` file to using [GitHub Releases](https://help.github.com/articles/creating-releases/), we needed a way to automatically generate these releases from our own devices, rather than always having to open a page in the browser and manually add all commits titles to a certain version tag.
