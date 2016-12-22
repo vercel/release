@@ -4,7 +4,15 @@
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 [![Slack Channel](https://zeit-slackin.now.sh/badge.svg)](https://zeit.chat)
 
-When run, this command line interface automatically generates a new [GitHub Release](https://help.github.com/articles/creating-releases/) and populates it with the changes made since the last release.
+When run, this command automatically handles all of the necessary steps for releasing your node project at once. Based on the configuration of your project, it also determines if certain steps need to be left out.
+
+Here's what it does:
+
+- `npm version <major|minor|patch>`
+- `git tag`
+- `git push origin master && git push --tags`
+- `npm publish`
+- Adding a [GitHub Release](https://help.github.com/articles/creating-releases/) and populating it
 
 ## Usage
 
