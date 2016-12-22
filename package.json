@@ -16,7 +16,7 @@
   "author": "leo",
   "license": "MIT",
   "bin": {
-    "release": "./index.js"
+    "release": "./bin/release.js"
   },
   "xo": {
     "esnext": true,
