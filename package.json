@@ -18,6 +18,11 @@
   "bin": {
     "release": "./index.js"
   },
+  "xo": {
+    "esnext": true,
+    "space": true,
+    "semicolon": false
+  },
   "bugs": {
     "url": "https://github.com/zeit/release/issues"
   },
