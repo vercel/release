@@ -1,7 +1,7 @@
 // Utilities
 const abort = require('./abort')
 
-module.exports = releaseType => {
+const checkType = releaseType => {
   if (!releaseType) {
     abort('Please define a release type (major, minor or patch).')
   }
@@ -15,4 +15,9 @@ module.exports = releaseType => {
   if (!releaseTypes.includes(releaseType)) {
     abort(`The release type "${releaseType}" is not valid.`)
   }
+}
+
+module.exports = sub => {
+  // Make sure the release type is correct
+  checkType(sub[0])
 }

@@ -7,10 +7,10 @@ const args = require('args')
 const validateProject = require('../utils/validate')
 
 args.parse(process.argv)
-const releaseType = args.sub[0]
 
 // Make sure that the project is ready for releases
 // If it's not, throw errors to indicate the exact problem
-validateProject(releaseType)
+validateProject(args.sub)
 
+const releaseType = args.sub[0]
 console.log(releaseType)
