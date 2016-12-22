@@ -21,7 +21,10 @@
   "xo": {
     "esnext": true,
     "space": true,
-    "semicolon": false
+    "semicolon": false,
+    "rules": {
+      "import/no-dynamic-require": 0
+    }
   },
   "bugs": {
     "url": "https://github.com/zeit/release/issues"
