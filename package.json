@@ -1,7 +1,7 @@
 {
   "name": "release",
   "version": "0.1.0",
-  "description": "Create GitHub Releases from the command line",
+  "description": "Handle the release of your project with a single command",
   "scripts": {
     "test": "xo"
   },
