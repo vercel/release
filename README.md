@@ -30,6 +30,7 @@ Once you've run the command, here's what will happen:
 4. The new commits and tags will be `git push`ed
 5. Based on the git tag, a new [GitHub Release](https://help.github.com/articles/creating-releases/) will be created and populated with the changes
 6. Assuming that the `private` property inside `package.json` is **not** set to `true`, the package will be published to npm
+7. DONE! You'll see a message telling you the release succeeded.
 
 ## Why?
 
