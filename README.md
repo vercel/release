@@ -14,13 +14,13 @@ Install the package:
 $ npm install -g release
 ```
 
-Run the command inside your project's directory:
+[Pick](http://semver.org/#summary) the release type and run this command inside your project's directory:
 
 ```bash
 $ release <major|minor|patch>
 ```
 
-Once you've run the command, here's what will happen:
+Here's what will happen after you executed the command:
 
 ### The Flow
 
