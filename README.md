@@ -26,9 +26,9 @@ Once you've run the command, here's what will happen:
 
 1. The `version` property inside `package.json` will be incremented
 2. All changes will be committed
-3. A `git tag` gets created (points to the commit created in step 2)
-4. The new commits and tags will be pushed to origin
-5. Based on the git tag, a new [GitHub Release](https://help.github.com/articles/creating-releases/) will be created
+3. A `git tag` will be created (points to the commit created in step 2)
+4. The new commits and tags will be `git push`ed
+5. Based on the git tag, a new [GitHub Release](https://help.github.com/articles/creating-releases/) will be created and populated with the changes
 6. Assuming that the `private` property inside `package.json` is **not** set to `true`, the package will be published to npm
 
 ## Why?
