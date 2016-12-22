@@ -1,0 +1,23 @@
+{
+  "name": "release",
+  "version": "0.1.0",
+  "description": "Create GitHub Releases from the command line",
+  "main": "index.js",
+  "scripts": {
+    "test": "xo"
+  },
+  "repository": "zeit/release",
+  "keywords": [
+    "github",
+    "releases",
+    "cli",
+    "tags",
+    "push"
+  ],
+  "author": "leo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zeit/release/issues"
+  },
+  "homepage": "https://github.com/zeit/release#readme"
+}
