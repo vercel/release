@@ -2,8 +2,10 @@
 
 // Native
 const path = require('path')
+const {execSync} = require('child_process')
 
 // Packages
+const github = require('github')
 const args = require('args')
 const {red} = require('chalk')
 
@@ -23,6 +25,23 @@ try {
   abort('Could not find a package.json file.')
 }
 
+if (!pkg.repository) {
+  abort('No repository field inside the package.json file.')
+}
 
-console.log(pkg)
-abort('Ddd')
+let githubToken
+
+try {
+  githubToken = execSync('security find-internet-password -s github.dcom -g -w', {
+    stdio: [
+      'ignore',
+      'pipe',
+      'ignore'
+    ]
+  })
+} catch (err) {
+  abort('Could not find GitHub token in Keychain.')
+}
+
+
+console.log(String(githubToken))
