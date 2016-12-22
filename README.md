@@ -14,7 +14,7 @@ Install the package:
 $ npm install -g release
 ```
 
-[Pick](http://semver.org/#summary) the release type and run this command inside your project's directory:
+Pick the [release type](http://semver.org/#summary) and run this command inside your project's directory:
 
 ```bash
 $ release <major|minor|patch>
