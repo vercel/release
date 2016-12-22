@@ -8,7 +8,7 @@ When run, this command line interface automatically generates a new [GitHub Rele
 
 ## Usage
 
-Install the package:
+Install the package from [npm](https://npmjs.com/release):
 
 ```bash
 $ npm install -g release
