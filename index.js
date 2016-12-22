@@ -5,7 +5,7 @@ const path = require('path')
 const {execSync} = require('child_process')
 
 // Packages
-const github = require('github')
+const GitHubAPI = require('github')
 const args = require('args')
 const {red} = require('chalk')
 const byeWhitespace = require('condense-whitespace')
@@ -46,4 +46,14 @@ try {
 
 githubToken = byeWhitespace(String(githubToken))
 
-console.log(githubToken)
+const github = new GitHubAPI({
+  protocol: 'https',
+  headers: {
+    'user-agent': 'Release'
+  }
+})
+
+github.authenticate({
+  type: 'token',
+  token: githubToken
+})
