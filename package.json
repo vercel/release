@@ -21,7 +21,10 @@
   "xo": {
     "esnext": true,
     "space": true,
-    "semicolon": false
+    "semicolon": false,
+    "rules": {
+      "unicorn/no-process-exit": 0
+    }
   },
   "bugs": {
     "url": "https://github.com/zeit/release/issues"
