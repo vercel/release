@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/zeit/release/issues"
   },
-  "homepage": "https://github.com/zeit/release#readme"
+  "homepage": "https://github.com/zeit/release#readme",
+  "devDependencies": {
+    "xo": "^0.17.1"
+  }
 }
