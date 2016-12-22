@@ -18,7 +18,7 @@ Run the command inside your project's directory:
 
 ```bash
 $ release
-``
+```
 
 ## Why?
 
