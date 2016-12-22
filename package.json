@@ -1,7 +1,7 @@
 {
   "name": "release",
   "version": "0.1.0",
-  "description": "Handle the release of your project with a single command",
+  "description": "Create GitHub Releases from the command line",
   "scripts": {
     "test": "xo"
   },
@@ -16,7 +16,7 @@
   "author": "leo",
   "license": "MIT",
   "bin": {
-    "release": "./bin/release.js"
+    "release": "./index.js"
   },
   "xo": {
     "esnext": true,
