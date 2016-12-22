@@ -44,7 +44,7 @@ Here's what will happen after you executed the command:
 
 As we at [ZEIT](https://github.com/zeit) moved all of our GitHub repositories from keeping a `HISTORY.md` file to using [GitHub Releases](https://help.github.com/articles/creating-releases/), we needed a way to automatically generate these releases from our own devices, rather than always having to open a page in the browser and manually add all commits titles to a certain version tag.
 
-While we've been on it, we also made sure to cover all of the other steps necessary for publishing a node project (like you can see it above).
+While on it, we also made sure to cover all of the other steps necessary for publishing a node project.
 
 ## Contributing
 
