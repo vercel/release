@@ -29,5 +29,9 @@
   "homepage": "https://github.com/zeit/release#readme",
   "devDependencies": {
     "xo": "^0.17.1"
+  },
+  "dependencies": {
+    "args": "^2.2.1",
+    "chalk": "^1.1.3"
   }
 }
