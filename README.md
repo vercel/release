@@ -22,7 +22,7 @@ $ release <major|minor|patch>
 
 Once you've run the command, here's what will happen:
 
-## The Flow
+### The Flow
 
 1. The `version` property inside `package.json` will be incremented
 2. All changes will be committed
