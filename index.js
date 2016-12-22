@@ -17,6 +17,25 @@ const abort = msg => {
   process.exit(1)
 }
 
+const findToken = () => {
+  const cmd = 'security find-internet-password -s github.com -g -w'
+  let token
+
+  try {
+    token = execSync(cmd, {
+      stdio: [
+        'ignore',
+        'pipe',
+        'ignore'
+      ]
+    })
+  } catch (err) {
+    abort('Could not find GitHub token in Keychain.')
+  }
+
+  return byeWhitespace(String(token))
+}
+
 const pkgPath = path.join(process.cwd(), 'package.json')
 let pkg
 
@@ -30,22 +49,6 @@ if (!pkg.repository) {
   abort('No repository field inside the package.json file.')
 }
 
-let githubToken
-
-try {
-  githubToken = execSync('security find-internet-password -s github.com -g -w', {
-    stdio: [
-      'ignore',
-      'pipe',
-      'ignore'
-    ]
-  })
-} catch (err) {
-  abort('Could not find GitHub token in Keychain.')
-}
-
-githubToken = byeWhitespace(String(githubToken))
-
 const github = new GitHubAPI({
   protocol: 'https',
   headers: {
@@ -55,5 +58,5 @@ const github = new GitHubAPI({
 
 github.authenticate({
   type: 'token',
-  token: githubToken
+  token: findToken()
 })
