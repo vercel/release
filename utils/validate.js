@@ -1,5 +1,20 @@
+// Native
+const path = require('path')
+const {existsSync} = require('fs')
+
 // Utilities
 const abort = require('./abort')
+
+const isRepo = () => {
+  const directory = process.cwd()
+
+  const gitPath = path.join(directory, '.git')
+  const headPath = path.join(directory, 'HEAD')
+
+  if (!existsSync(gitPath) && !existsSync(headPath)) {
+    abort('Directory is a not a valid Git repository.')
+  }
+}
 
 const checkType = releaseType => {
   if (!releaseType) {
@@ -20,4 +35,7 @@ const checkType = releaseType => {
 module.exports = sub => {
   // Make sure the release type is correct
   checkType(sub[0])
+
+  // Check if it's a Git repository
+  isRepo()
 }
