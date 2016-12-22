@@ -8,6 +8,7 @@ const {execSync} = require('child_process')
 const github = require('github')
 const args = require('args')
 const {red} = require('chalk')
+const byeWhitespace = require('condense-whitespace')
 
 args.parse(process.argv)
 
@@ -43,5 +44,6 @@ try {
   abort('Could not find GitHub token in Keychain.')
 }
 
+githubToken = byeWhitespace(String(githubToken))
 
-console.log(String(githubToken))
+console.log(githubToken)
