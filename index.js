@@ -32,7 +32,7 @@ if (!pkg.repository) {
 let githubToken
 
 try {
-  githubToken = execSync('security find-internet-password -s github.dcom -g -w', {
+  githubToken = execSync('security find-internet-password -s github.com -g -w', {
     stdio: [
       'ignore',
       'pipe',
