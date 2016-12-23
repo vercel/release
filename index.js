@@ -29,6 +29,29 @@ const changeTypes = [
   'patch'
 ]
 
+const changeTypesDetailed = [
+  'Major Change (incompatible API change)',
+  'Minor Change (functionality in a backwards-compatible manner)',
+  'Patch (backwards-compatible bug fix)'
+]
+
+const getChoices = () => {
+  const list = []
+
+  for (const type of changeTypes) {
+    const index = changeTypes.indexOf(type)
+    const short = type
+
+    list.push({
+      name: changeTypesDetailed[index],
+      value: short,
+      short
+    })
+  }
+
+  return list
+}
+
 const findToken = () => {
   const cmd = 'security find-internet-password -s github.com -g -w'
   let token
@@ -110,7 +133,7 @@ const orderCommits = (commits, latest) => {
       name: commit.hash,
       message: commit.title,
       type: 'list',
-      choices: changeTypes
+      choices: getChoices()
     })
   }
 
