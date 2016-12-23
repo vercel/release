@@ -11,6 +11,7 @@ const {red} = require('chalk')
 const byeWhitespace = require('condense-whitespace')
 const gitCommits = require('git-commits')
 const semVer = require('semver')
+const inquirer = require('inquirer')
 
 // Ours
 const pkg = require('./package')
@@ -74,6 +75,27 @@ const getCommits = () => new Promise(resolve => {
   })
 })
 
+const orderCommits = (commits, latest) => {
+  const questions = []
+
+  for (const commit of commits) {
+    questions.push({
+      name: commit.hash,
+      message: commit.title,
+      type: 'list',
+      choices: [
+        'major',
+        'minor',
+        'patch'
+      ]
+    })
+  }
+
+  inquirer.prompt(questions).then(types => {
+    console.log(types)
+  })
+}
+
 const changes = () => {
   getCommits().then(commits => {
     const latestCommit = commits[0]
@@ -88,7 +110,7 @@ const changes = () => {
       abort('The last commit wasn\'t created by `npm version`.')
     }
 
-    console.log(latestCommit)
+    orderCommits(commits, latestCommit)
   })
 }
 
