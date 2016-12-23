@@ -70,5 +70,9 @@ if (!info.repository) {
   abort('No repository field inside the package.json file.')
 }
 
+if (!info.version) {
+  abort('No version field inside the package.json file.')
+}
+
 const github = connector()
 console.log(github)
