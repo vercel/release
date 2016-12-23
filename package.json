@@ -23,7 +23,8 @@
     "space": true,
     "semicolon": false,
     "rules": {
-      "import/no-dynamic-require": 0
+      "import/no-dynamic-require": 0,
+      "camelcase": 0
     }
   },
   "bugs": {

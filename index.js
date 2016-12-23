@@ -214,6 +214,19 @@ const createChangelog = (types, commits) => {
   return stripWhitespace.right(text)
 }
 
+const createRelease = (tag_name, changelog) => {
+  const github = connector()
+
+  github.repos.createRelease({
+    owner: 'zeit',
+    repo: 'test',
+    tag_name,
+    body: changelog
+  })
+
+  console.log('Done!')
+}
+
 const orderCommits = (commits, latest) => {
   const questions = []
   const predefined = {}
@@ -246,11 +259,12 @@ const orderCommits = (commits, latest) => {
     const grouped = groupChanges(results)
     const changelog = createChangelog(grouped, commits)
 
-    console.log(changelog)
+    // Upload changelog to GitHub Releases
+    createRelease(latest.title, changelog)
   })
 }
 
-const changes = () => {
+const collectChanges = () => {
   getCommits().then(commits => {
     const latestCommit = commits[0]
 
@@ -285,4 +299,4 @@ if (!info.version) {
   abort('No version field inside the package.json file.')
 }
 
-changes()
+collectChanges()
