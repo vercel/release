@@ -182,12 +182,21 @@ const createChangelog = (types, commits) => {
     // Add heading
     text += `### ${plural(typeInfo.name)} \n\n`
 
+    // Find last change, in order to be able
+    // to add a newline after it
+    const lastChange = changes[changes.length - 1]
+
     for (const change of changes) {
       text += pickCommit(change, commits)
+
+      if (change === lastChange) {
+        text += '\n'
+      }
     }
   }
 
-  return text
+  // Remove newlines from the end
+  return text.replace(/^\s+|\s+$/g, '')
 }
 
 const orderCommits = (commits, latest) => {
