@@ -13,6 +13,7 @@ const gitCommits = require('git-commits')
 const semVer = require('semver')
 const inquirer = require('inquirer')
 const {plural} = require('pluralize')
+const capitalize = require('capitalize')
 
 // Ours
 const pkg = require('./package')
@@ -117,11 +118,11 @@ const getCommits = () => new Promise(resolve => {
   })
 })
 
-const typeDefined = commit => {
+const typeDefined = commitTitle => {
   for (const type of changeTypes) {
     const handle = '(' + type.handle + ')'
 
-    if (commit.title.includes(handle)) {
+    if (commitTitle.includes(handle)) {
       return type.handle
     }
   }
@@ -153,12 +154,26 @@ const groupChanges = changes => {
   return types
 }
 
+const cleanCommitTitle = title => {
+  const definition = typeDefined(title)
+
+  // If commit title contains the change type definition,
+  // we need to hide it in the changelog
+  if (definition) {
+    title = title.replace('(' + definition + ')', '')
+  }
+
+  // Capitalize and remove trailing whitespace
+  return stripWhitespace(capitalize(title))
+}
+
 const pickCommit = (hash, all) => {
   const related = all.filter(item => {
     return item.hash === hash
   })[0]
 
-  return `- ${related.title}: ${hash}\n`
+  const title = cleanCommitTitle(related.title)
+  return `- ${title}: ${hash}\n`
 }
 
 const createChangelog = (types, commits) => {
@@ -211,7 +226,7 @@ const orderCommits = (commits, latest) => {
       continue
     }
 
-    const definition = typeDefined(commit)
+    const definition = typeDefined(commit.title)
 
     if (definition) {
       predefined[commit.hash] = definition
