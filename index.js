@@ -23,6 +23,12 @@ const abort = msg => {
   process.exit(1)
 }
 
+const changeTypes = [
+  'major',
+  'minor',
+  'patch'
+]
+
 const findToken = () => {
   const cmd = 'security find-internet-password -s github.com -g -w'
   let token
@@ -75,26 +81,41 @@ const getCommits = () => new Promise(resolve => {
   })
 })
 
+const typeDefined = commit => {
+  for (const type of changeTypes) {
+    if (commit.title.includes(`(${type})`)) {
+      return type
+    }
+  }
+
+  return false
+}
+
 const orderCommits = (commits, latest) => {
   const questions = []
+  const predefined = {}
 
   // Show the latest changes first
   commits.reverse()
 
   for (const commit of commits) {
+    const definition = typeDefined(commit)
+
+    if (definition) {
+      predefined[commit.hash] = definition
+      continue
+    }
+
     questions.push({
       name: commit.hash,
       message: commit.title,
       type: 'list',
-      choices: [
-        'major',
-        'minor',
-        'patch'
-      ]
+      choices: changeTypes
     })
   }
 
   inquirer.prompt(questions).then(types => {
+    console.log(predefined)
     console.log(types)
   })
 }
