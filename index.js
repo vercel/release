@@ -51,7 +51,9 @@ const getChoices = () => {
   return list.concat([
     new inquirer.Separator(),
     {
-      name: 'Ignore'
+      name: 'Ignore',
+      short: '(ignored)',
+      value: 'ignore'
     }
   ])
 }
