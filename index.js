@@ -8,7 +8,7 @@ const {execSync} = require('child_process')
 const GitHubAPI = require('github')
 const args = require('args')
 const {red} = require('chalk')
-const byeWhitespace = require('condense-whitespace')
+const stripWhitespace = require('trim')
 const gitCommits = require('git-commits')
 const semVer = require('semver')
 const inquirer = require('inquirer')
@@ -81,7 +81,7 @@ const findToken = () => {
     abort('Could not find GitHub token in Keychain.')
   }
 
-  return byeWhitespace(String(token))
+  return stripWhitespace(String(token))
 }
 
 const connector = () => {
@@ -196,7 +196,7 @@ const createChangelog = (types, commits) => {
   }
 
   // Remove newlines from the end
-  return text.replace(/^\s+|\s+$/g, '')
+  return stripWhitespace.right(text)
 }
 
 const orderCommits = (commits, latest) => {
