@@ -36,6 +36,24 @@ const findToken = () => {
   return byeWhitespace(String(token))
 }
 
+const connector = () => {
+  const token = findToken()
+
+  const github = new GitHubAPI({
+    protocol: 'https',
+    headers: {
+      'user-agent': 'Release'
+    }
+  })
+
+  github.authenticate({
+    type: 'token',
+    token
+  })
+
+  return github
+}
+
 const pkgPath = path.join(process.cwd(), 'package.json')
 let pkg
 
@@ -49,14 +67,5 @@ if (!pkg.repository) {
   abort('No repository field inside the package.json file.')
 }
 
-const github = new GitHubAPI({
-  protocol: 'https',
-  headers: {
-    'user-agent': 'Release'
-  }
-})
-
-github.authenticate({
-  type: 'token',
-  token: findToken()
-})
+const github = connector()
+console.log(github)
