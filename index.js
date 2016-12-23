@@ -128,6 +128,10 @@ const orderCommits = (commits, latest) => {
   commits.reverse()
 
   for (const commit of commits) {
+    if (semVer.valid(commit.title)) {
+      continue
+    }
+
     const definition = typeDefined(commit)
 
     if (definition) {
