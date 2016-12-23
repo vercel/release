@@ -9,6 +9,7 @@ const GitHubAPI = require('github')
 const args = require('args')
 const {red} = require('chalk')
 const byeWhitespace = require('condense-whitespace')
+const gitCommits = require('git-commits')
 
 // Ours
 const pkg = require('./package')
@@ -57,6 +58,27 @@ const connector = () => {
   return github
 }
 
+const getCommits = () => new Promise(resolve => {
+  const repoPath = path.join(process.cwd(), '.git')
+  const commits = []
+
+  gitCommits(repoPath, {
+    limit: 10
+  }).on('data', commit => {
+    commits.push(commit)
+  }).on('error', () => {
+    abort('Not able to collect commits.')
+  }).on('end', () => {
+    resolve(commits)
+  })
+})
+
+const changes = () => {
+  getCommits().then(commits => {
+    console.log(commits)
+  })
+}
+
 const infoPath = path.join(process.cwd(), 'package.json')
 let info
 
@@ -74,5 +96,4 @@ if (!info.version) {
   abort('No version field inside the package.json file.')
 }
 
-const github = connector()
-console.log(github)
+changes()
