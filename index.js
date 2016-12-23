@@ -141,6 +141,11 @@ const groupChanges = changes => {
     }
 
     const changeType = changes[change]
+
+    if (changeType === 'ignore') {
+      continue
+    }
+
     types[changeType].push(change)
   }
 
