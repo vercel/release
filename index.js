@@ -15,6 +15,8 @@ const inquirer = require('inquirer')
 const {plural} = require('pluralize')
 const capitalize = require('capitalize')
 const ora = require('ora')
+const isURL = require('is-url')
+const parseRepo = require('github-url-to-object')
 
 // Ours
 const pkg = require('./package')
@@ -225,13 +227,31 @@ const createChangelog = (types, commits) => {
   return stripWhitespace.right(text)
 }
 
-const createRelease = (tag_name, changelog) => {
+const getRepo = field => {
+  if (typeof field === 'string') {
+    if (isURL(field)) {
+      return parseRepo(field)
+    }
+
+    return parseRepo(`github:${field}`)
+  }
+
+  if (field.url) {
+    return parseRepo(field.url)
+  }
+
+  abort('Could not determine GitHub repository.')
+}
+
+const createRelease = (tag_name, changelog, project) => {
   const github = connector()
+  const repoDetails = getRepo(project.repository)
+
   newSpinner('Uploading release')
 
   github.repos.createRelease({
-    owner: 'zeit',
-    repo: 'test',
+    owner: repoDetails.user,
+    repo: repoDetails.repo,
     tag_name,
     body: changelog
   })
@@ -240,7 +260,7 @@ const createRelease = (tag_name, changelog) => {
   console.log(`\nDone! 🎉`)
 }
 
-const orderCommits = (commits, latest) => {
+const orderCommits = (commits, latest, project) => {
   const questions = []
   const predefined = {}
 
@@ -279,11 +299,11 @@ const orderCommits = (commits, latest) => {
     const changelog = createChangelog(grouped, commits)
 
     // Upload changelog to GitHub Releases
-    createRelease(latest.title, changelog)
+    createRelease(latest.title, changelog, project)
   })
 }
 
-const collectChanges = () => {
+const collectChanges = project => {
   newSpinner('Loading commit history')
 
   getCommits().then(commits => {
@@ -299,7 +319,7 @@ const collectChanges = () => {
       abort('The latest commit wasn\'t created by `npm version`.')
     }
 
-    orderCommits(commits, latestCommit)
+    orderCommits(commits, latestCommit, project)
   })
 }
 
@@ -320,4 +340,4 @@ if (!info.version) {
   abort('No version field inside the package.json file.')
 }
 
-collectChanges()
+collectChanges(info)
