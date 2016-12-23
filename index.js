@@ -78,6 +78,9 @@ const getCommits = () => new Promise(resolve => {
 const orderCommits = (commits, latest) => {
   const questions = []
 
+  // Show the latest changes first
+  commits.reverse()
+
   for (const commit of commits) {
     questions.push({
       name: commit.hash,
