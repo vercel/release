@@ -7,22 +7,32 @@ const {execSync} = require('child_process')
 // Packages
 const GitHubAPI = require('github')
 const args = require('args')
-const {red} = require('chalk')
+const {red, green} = require('chalk')
 const stripWhitespace = require('trim')
 const gitCommits = require('git-commits')
 const semVer = require('semver')
 const inquirer = require('inquirer')
 const {plural} = require('pluralize')
 const capitalize = require('capitalize')
+const ora = require('ora')
 
 // Ours
 const pkg = require('./package')
 
 args.parse(process.argv)
+let spinner
 
 const abort = msg => {
   console.error(`${red('Error!')} ${msg}`)
   process.exit(1)
+}
+
+const newSpinner = message => {
+  if (spinner) {
+    spinner.succeed()
+  }
+
+  spinner = ora(message).start()
 }
 
 const changeTypes = [
@@ -86,6 +96,7 @@ const findToken = () => {
 }
 
 const connector = () => {
+  newSpinner('Searching for GitHub token on device')
   const token = findToken()
 
   const github = new GitHubAPI({
@@ -216,6 +227,7 @@ const createChangelog = (types, commits) => {
 
 const createRelease = (tag_name, changelog) => {
   const github = connector()
+  newSpinner('Uploading release')
 
   github.repos.createRelease({
     owner: 'zeit',
@@ -224,7 +236,8 @@ const createRelease = (tag_name, changelog) => {
     body: changelog
   })
 
-  console.log('Done!')
+  spinner.succeed()
+  console.log(`\nDone! 🎉`)
 }
 
 const orderCommits = (commits, latest) => {
@@ -254,7 +267,13 @@ const orderCommits = (commits, latest) => {
     })
   }
 
+  spinner.succeed()
+  console.log(`${green('!')} Please enter the type of change for each commit:\n\n`)
+
   inquirer.prompt(questions).then(types => {
+    // Update the spinner status
+    newSpinner('Generating the changelog')
+
     const results = Object.assign({}, predefined, types)
     const grouped = groupChanges(results)
     const changelog = createChangelog(grouped, commits)
@@ -265,6 +284,8 @@ const orderCommits = (commits, latest) => {
 }
 
 const collectChanges = () => {
+  newSpinner('Loading commit history')
+
   getCommits().then(commits => {
     const latestCommit = commits[0]
 
