@@ -39,6 +39,7 @@
     "condense-whitespace": "^1.0.0",
     "git-commits": "^1.2.0",
     "github": "^7.1.0",
-    "ora": "^0.4.0"
+    "ora": "^0.4.0",
+    "semver": "^5.3.0"
   }
 }

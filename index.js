@@ -10,6 +10,7 @@ const args = require('args')
 const {red} = require('chalk')
 const byeWhitespace = require('condense-whitespace')
 const gitCommits = require('git-commits')
+const semVer = require('semver')
 
 // Ours
 const pkg = require('./package')
@@ -75,7 +76,19 @@ const getCommits = () => new Promise(resolve => {
 
 const changes = () => {
   getCommits().then(commits => {
-    console.log(commits)
+    const latestCommit = commits[0]
+
+    if (!latestCommit) {
+      abort('Could not load latest commits.')
+    }
+
+    const isTag = semVer.valid(latestCommit.title)
+
+    if (!isTag) {
+      abort('The last commit wasn\'t created by `npm version`.')
+    }
+
+    console.log(latestCommit)
   })
 }
 
