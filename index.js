@@ -10,6 +10,9 @@ const args = require('args')
 const {red} = require('chalk')
 const byeWhitespace = require('condense-whitespace')
 
+// Ours
+const pkg = require('./package')
+
 args.parse(process.argv)
 
 const abort = msg => {
@@ -42,7 +45,7 @@ const connector = () => {
   const github = new GitHubAPI({
     protocol: 'https',
     headers: {
-      'user-agent': 'Release'
+      'user-agent': `Release v${pkg.version}`
     }
   })
 
@@ -54,16 +57,16 @@ const connector = () => {
   return github
 }
 
-const pkgPath = path.join(process.cwd(), 'package.json')
-let pkg
+const infoPath = path.join(process.cwd(), 'package.json')
+let info
 
 try {
-  pkg = require(pkgPath)
+  info = require(infoPath)
 } catch (err) {
   abort('Could not find a package.json file.')
 }
 
-if (!pkg.repository) {
+if (!info.repository) {
   abort('No repository field inside the package.json file.')
 }
 
