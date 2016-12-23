@@ -12,6 +12,7 @@ const byeWhitespace = require('condense-whitespace')
 const gitCommits = require('git-commits')
 const semVer = require('semver')
 const inquirer = require('inquirer')
+const {plural} = require('pluralize')
 
 // Ours
 const pkg = require('./package')
@@ -152,6 +153,31 @@ const groupChanges = changes => {
   return types
 }
 
+const createChangelog = (types, commits) => {
+  let text = ''
+
+  for (const type in types) {
+    if (!{}.hasOwnProperty.call(types, type)) {
+      continue
+    }
+
+    const changes = types[type]
+
+    if (changes.length < 1) {
+      continue
+    }
+
+    const typeInfo = changeTypes.filter(item => {
+      return item.handle === type
+    })[0]
+
+    // Add heading
+    text += `### ${plural(typeInfo.name)} \n\n`
+  }
+
+  return text
+}
+
 const orderCommits = (commits, latest) => {
   const questions = []
   const predefined = {}
@@ -182,8 +208,9 @@ const orderCommits = (commits, latest) => {
   inquirer.prompt(questions).then(types => {
     const results = Object.assign({}, predefined, types)
     const grouped = groupChanges(results)
+    const changelog = createChangelog(grouped, commits)
 
-    console.log(grouped)
+    console.log(changelog)
   })
 }
 
