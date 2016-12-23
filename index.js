@@ -24,27 +24,33 @@ const abort = msg => {
 }
 
 const changeTypes = [
-  'major',
-  'minor',
-  'patch'
-]
-
-const changeTypesDetailed = [
-  'Major Change (incompatible API change)',
-  'Minor Change (backwards-compatible functionality)',
-  'Patch (backwards-compatible bug fix)'
+  {
+    handle: 'major',
+    name: 'Major Change',
+    description: 'incompatible API change'
+  },
+  {
+    handle: 'minor',
+    name: 'Minor Change',
+    description: 'backwards-compatible functionality'
+  },
+  {
+    handle: 'patch',
+    name: 'Patch',
+    description: 'backwards-compatible bug fix'
+  }
 ]
 
 const getChoices = () => {
   const list = []
 
   for (const type of changeTypes) {
-    const index = changeTypes.indexOf(type)
+    const short = type.handle
 
     list.push({
-      name: changeTypesDetailed[index],
-      value: type,
-      short: '(' + type + ')'
+      name: `${type.name} (${type.description})`,
+      value: short,
+      short: '(' + short + ')'
     })
   }
 
@@ -112,8 +118,8 @@ const getCommits = () => new Promise(resolve => {
 
 const typeDefined = commit => {
   for (const type of changeTypes) {
-    if (commit.title.includes(`(${type})`)) {
-      return type
+    if (commit.title.includes('(' + type.handle + ')')) {
+      return type.handle
     }
   }
 
@@ -124,7 +130,7 @@ const groupChanges = changes => {
   const types = {}
 
   for (const type of changeTypes) {
-    types[type] = []
+    types[type.handle] = []
   }
 
   for (const change in changes) {
