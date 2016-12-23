@@ -30,9 +30,9 @@ const changeTypes = [
 ]
 
 const changeTypesDetailed = [
-  'Major Change',
-  'Minor Change',
-  'Patch'
+  'Major Change (incompatible API change)',
+  'Minor Change (backwards-compatible functionality)',
+  'Patch (backwards-compatible bug fix)'
 ]
 
 const getChoices = () => {
