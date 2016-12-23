@@ -153,6 +153,14 @@ const groupChanges = changes => {
   return types
 }
 
+const pickCommit = (hash, all) => {
+  const related = all.filter(item => {
+    return item.hash === hash
+  })[0]
+
+  return `- ${related.title}: ${hash}\n`
+}
+
 const createChangelog = (types, commits) => {
   let text = ''
 
@@ -173,6 +181,10 @@ const createChangelog = (types, commits) => {
 
     // Add heading
     text += `### ${plural(typeInfo.name)} \n\n`
+
+    for (const change of changes) {
+      text += pickCommit(change, commits)
+    }
   }
 
   return text
