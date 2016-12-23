@@ -40,12 +40,11 @@ const getChoices = () => {
 
   for (const type of changeTypes) {
     const index = changeTypes.indexOf(type)
-    const short = type
 
     list.push({
       name: changeTypesDetailed[index],
-      value: short,
-      short
+      value: type,
+      short: '(' + type + ')'
     })
   }
 
