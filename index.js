@@ -120,6 +120,25 @@ const typeDefined = commit => {
   return false
 }
 
+const groupChanges = changes => {
+  const types = {}
+
+  for (const type of changeTypes) {
+    types[type] = []
+  }
+
+  for (const change in changes) {
+    if (!{}.hasOwnProperty.call(changes, change)) {
+      continue
+    }
+
+    const changeType = changes[change]
+    types[changeType].push(change)
+  }
+
+  return types
+}
+
 const orderCommits = (commits, latest) => {
   const questions = []
   const predefined = {}
@@ -148,8 +167,10 @@ const orderCommits = (commits, latest) => {
   }
 
   inquirer.prompt(questions).then(types => {
-    console.log(predefined)
-    console.log(types)
+    const results = Object.assign({}, predefined, types)
+    const grouped = groupChanges(results)
+
+    console.log(grouped)
   })
 }
 
@@ -164,7 +185,7 @@ const changes = () => {
     const isTag = semVer.valid(latestCommit.title)
 
     if (!isTag) {
-      abort('The last commit wasn\'t created by `npm version`.')
+      abort('The latest commit wasn\'t created by `npm version`.')
     }
 
     orderCommits(commits, latestCommit)
