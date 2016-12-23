@@ -118,7 +118,9 @@ const getCommits = () => new Promise(resolve => {
 
 const typeDefined = commit => {
   for (const type of changeTypes) {
-    if (commit.title.includes('(' + type.handle + ')')) {
+    const handle = '(' + type.handle + ')'
+
+    if (commit.title.includes(handle)) {
       return type.handle
     }
   }
