@@ -48,7 +48,12 @@ const getChoices = () => {
     })
   }
 
-  return list
+  return list.concat([
+    new inquirer.Separator(),
+    {
+      name: 'Ignore'
+    }
+  ])
 }
 
 const findToken = () => {
