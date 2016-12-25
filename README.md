@@ -40,11 +40,11 @@ When running the `release` command, you'll be asked to provide the type for all 
 
 ### Pre-Defining the Type of a Commit
 
-If you want to automate this even further, simply specify the change type of your commits by adding it to the **title** or **description**. Simply include it within parenthesis:
+If you want to automate this even further, simply specify the change type of your commits by adding it to the **title** or **description** within parenthesis:
 
-```bash
-git commit -m "Error logging works now (patch)"
-```
+> Error logging works now (patch)
+
+Assuming that you've defined the type of change for a certain commit, the package won't ask you to set a type for it manually.
 
 ## Why?
 
