@@ -38,6 +38,8 @@ As described in the [Semantic Versioning](http://semver.org/#summary) guide, eac
 
 After running the `release` command, you'll be asked to provide a type for the commits you've created since the last release. This allows the package to automatically generate a proper changelog for you.
 
+#### Pre-Defining the Type of a Commit
+
 If you want to automate this even further, simply specify the change type of your commits by adding it to the title or description. Here's an example of how such a commit title could look like:
 
 > Fixed error logging (patch)
