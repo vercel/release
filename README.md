@@ -4,7 +4,7 @@
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 [![Slack Channel](https://zeit-slackin.now.sh/badge.svg)](https://zeit.chat)
 
-When run, this command line interface automatically generates a new [GitHub Release](https://help.github.com/articles/creating-releases/) and populates it with the changes made since the last release.
+When run, this command line interface automatically generates a new [GitHub Release](https://help.github.com/articles/creating-releases/) and populates it with the changes (commits) added since the last release.
 
 ## Usage
 
@@ -27,6 +27,20 @@ Simply run this command to get a list of all available options:
 ```bash
 $ release -h
 ```
+
+### Change Types
+
+As described in the [Semantic Versioning](http://semver.org/#summary) guide, each commit can fall into one of these categories:
+
+- **Major Change** (incompatible API change)
+- **Minor Change** (backwards-compatible functionality)
+- **Patch** (backwards-compatible bug fix)
+
+After running the `release` command, you'll be asked to provide a type for the commits you've created since the last release. This allows the package to automatically generate a proper changelog for you.
+
+If you want to automate this even further, simply specify the change type of your commits by adding it to the title or description. Here's an example of how such a commit title could look like:
+
+> Fixed error logging (patch)
 
 ## Why?
 
