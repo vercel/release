@@ -17,10 +17,12 @@ const ora = require('ora')
 
 // Ours
 const pkg = require('./package')
-const groupChanges = require('./lib/group-changes')
-const getRepo = require('./lib/get-repo')
+const groupChanges = require('./lib/group')
+const getRepo = require('./lib/repo')
 const abort = require('./lib/abort')
-const getCommits = require('./lib/get-commits')
+const getCommits = require('./lib/commits')
+const getChoices = require('./lib/choices')
+const typeDefined = require('./lib/type')
 
 args
   .option('draft', `Don't publish the release right away`)
@@ -68,29 +70,6 @@ const changeTypes = [
   }
 ]
 
-const getChoices = () => {
-  const list = []
-
-  for (const type of changeTypes) {
-    const short = type.handle
-
-    list.push({
-      name: `${type.name} (${type.description})`,
-      value: short,
-      short: '(' + short + ')'
-    })
-  }
-
-  return list.concat([
-    new inquirer.Separator(),
-    {
-      name: 'Ignore',
-      short: '(ignored)',
-      value: 'ignore'
-    }
-  ])
-}
-
 const findToken = () => {
   const cmd = 'security find-internet-password -s github.com -g -w'
   let token
@@ -129,20 +108,8 @@ const connector = () => {
   return github
 }
 
-const typeDefined = text => {
-  for (const type of changeTypes) {
-    const handle = '(' + type.handle + ')'
-
-    if (text.includes(handle)) {
-      return type.handle
-    }
-  }
-
-  return false
-}
-
 const cleanCommitTitle = title => {
-  const definition = typeDefined(title)
+  const definition = typeDefined(title, changeTypes)
 
   // If commit title contains the change type definition,
   // we need to hide it in the changelog
@@ -254,8 +221,10 @@ const orderCommits = (commits, latest, exists) => {
   commits.reverse()
 
   for (const commit of commits) {
-    const isDef = typeDefined
-    const definition = isDef(commit.title) || isDef(commit.description)
+    const defTitle = typeDefined(commit.title, changeTypes)
+    const defDescription = typeDefined(commit.description, changeTypes)
+
+    const definition = defTitle || defDescription
 
     if (definition) {
       predefined[commit.hash] = definition
@@ -266,7 +235,7 @@ const orderCommits = (commits, latest, exists) => {
       name: commit.hash,
       message: commit.title,
       type: 'list',
-      choices: getChoices()
+      choices: getChoices(changeTypes)
     })
   }
 
