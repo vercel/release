@@ -247,6 +247,18 @@ const getRepo = field => {
   abort('Could not determine GitHub repository.')
 }
 
+const getReleaseURL = version => {
+  if (!repoDetails) {
+    return ''
+  }
+
+  let releaseURL = `https://github.com/${repoDetails.user}`
+  releaseURL += `/${repoDetails.repo}/releases`
+  releaseURL += `/tag/${version}`
+
+  return releaseURL
+}
+
 const createRelease = (tag_name, changelog) => {
   newSpinner('Uploading release' + (flags.draft ? ' as draft' : ''))
 
@@ -259,7 +271,9 @@ const createRelease = (tag_name, changelog) => {
   })
 
   spinner.succeed()
+
   console.log(`\nDone! 🎉`)
+  console.log(`Here's the release: ${getReleaseURL(tag_name)}`)
 }
 
 const orderCommits = (commits, latest) => {
@@ -348,13 +362,9 @@ const checkReleaseStatus = project => {
     }
 
     spinner.succeed()
-
     console.log('')
 
-    let releaseURL = `https://github.com/${repoDetails.user}`
-    releaseURL += `/${repoDetails.repo}/releases`
-    releaseURL += `/tag/${project.version}`
-
+    const releaseURL = getReleaseURL(project.version)
     abort(`Release already exists: ${releaseURL}`)
   })
 }
