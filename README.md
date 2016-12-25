@@ -20,6 +20,14 @@ Run this command inside your project's directory:
 $ release
 ```
 
+### Options
+
+Simply run this command to get a list of all available options:
+
+```bash
+$ release -h
+```
+
 ## Why?
 
 As we at [ZEIT](https://github.com/zeit) moved all of our GitHub repositories from keeping a `HISTORY.md` file to using [GitHub Releases](https://help.github.com/articles/creating-releases/), we needed a way to automatically generate these releases from our own devices, rather than always having to open a page in the browser and manually add all commits titles to a certain version tag.
