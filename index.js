@@ -2,17 +2,13 @@
 
 // Native
 const path = require('path')
-const {execSync} = require('child_process')
 
 // Packages
 const GitHubAPI = require('github')
 const args = require('args')
 const {green} = require('chalk')
-const stripWhitespace = require('trim')
 const semVer = require('semver')
 const inquirer = require('inquirer')
-const {plural} = require('pluralize')
-const capitalize = require('capitalize')
 const ora = require('ora')
 
 // Ours
@@ -23,6 +19,8 @@ const abort = require('./lib/abort')
 const getCommits = require('./lib/commits')
 const getChoices = require('./lib/choices')
 const typeDefined = require('./lib/type')
+const findToken = require('./lib/token')
+const createChangelog = require('./lib/changelog')
 
 args
   .option('draft', `Don't publish the release right away`)
@@ -70,25 +68,6 @@ const changeTypes = [
   }
 ]
 
-const findToken = () => {
-  const cmd = 'security find-internet-password -s github.com -g -w'
-  let token
-
-  try {
-    token = execSync(cmd, {
-      stdio: [
-        'ignore',
-        'pipe',
-        'ignore'
-      ]
-    })
-  } catch (err) {
-    abort('Could not find GitHub token in Keychain.')
-  }
-
-  return stripWhitespace(String(token))
-}
-
 const connector = () => {
   newSpinner('Searching for GitHub token on device')
   const token = findToken()
@@ -106,66 +85,6 @@ const connector = () => {
   })
 
   return github
-}
-
-const cleanCommitTitle = title => {
-  const definition = typeDefined(title, changeTypes)
-
-  // If commit title contains the change type definition,
-  // we need to hide it in the changelog
-  if (definition) {
-    title = title.replace('(' + definition + ')', '')
-  }
-
-  // Capitalize and remove trailing whitespace
-  return stripWhitespace(capitalize(title))
-}
-
-const pickCommit = (hash, all) => {
-  const related = all.filter(item => {
-    return item.hash === hash
-  })[0]
-
-  const title = cleanCommitTitle(related.title)
-  return `- ${title}: ${hash}\n`
-}
-
-const createChangelog = (types, commits) => {
-  let text = ''
-
-  for (const type in types) {
-    if (!{}.hasOwnProperty.call(types, type)) {
-      continue
-    }
-
-    const changes = types[type]
-
-    if (changes.length < 1) {
-      continue
-    }
-
-    const typeInfo = changeTypes.filter(item => {
-      return item.handle === type
-    })[0]
-
-    // Add heading
-    text += `### ${plural(typeInfo.name)} \n\n`
-
-    // Find last change, in order to be able
-    // to add a newline after it
-    const lastChange = changes[changes.length - 1]
-
-    for (const change of changes) {
-      text += pickCommit(change, commits)
-
-      if (change === lastChange) {
-        text += '\n'
-      }
-    }
-  }
-
-  // Remove newlines from the end
-  return stripWhitespace.right(text)
 }
 
 const getReleaseURL = version => {
@@ -254,7 +173,7 @@ const orderCommits = (commits, latest, exists) => {
 
     const results = Object.assign({}, predefined, types)
     const grouped = groupChanges(results, changeTypes)
-    const changelog = createChangelog(grouped, commits)
+    const changelog = createChangelog(grouped, commits, changeTypes)
 
     // Upload changelog to GitHub Releases
     createRelease(latest.title, changelog, exists)
