@@ -148,11 +148,11 @@ const getCommits = () => new Promise(resolve => {
   })
 })
 
-const typeDefined = commitTitle => {
+const typeDefined = text => {
   for (const type of changeTypes) {
     const handle = '(' + type.handle + ')'
 
-    if (commitTitle.includes(handle)) {
+    if (text.includes(handle)) {
       return type.handle
     }
   }
@@ -317,9 +317,8 @@ const orderCommits = (commits, latest, exists) => {
       continue
     }
 
-    console.log(commit)
-
-    const definition = typeDefined(commit.title)
+    const isDef = typeDefined
+    const definition = isDef(commit.title) || isDef(commit.description)
 
     if (definition) {
       predefined[commit.hash] = definition
