@@ -30,7 +30,7 @@ $ release -h
 
 ## Change Types
 
-As described in the [Semantic Versioning](http://semver.org/#summary) guide, each commit can fall into one of these categories:
+As described in the [SemVer guide](http://semver.org/#summary), each commit can fall into one of these categories:
 
 - **Major Changes** (incompatible API changes)
 - **Minor Changes** (functionality in a backwards-compatible manner)
