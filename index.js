@@ -7,19 +7,20 @@ const {execSync} = require('child_process')
 // Packages
 const GitHubAPI = require('github')
 const args = require('args')
-const {red, green} = require('chalk')
+const {green} = require('chalk')
 const stripWhitespace = require('trim')
-const gitCommits = require('git-commits')
 const semVer = require('semver')
 const inquirer = require('inquirer')
 const {plural} = require('pluralize')
 const capitalize = require('capitalize')
 const ora = require('ora')
-const isURL = require('is-url')
-const parseRepo = require('github-url-to-object')
 
 // Ours
 const pkg = require('./package')
+const groupChanges = require('./steps/group-changes')
+const getRepo = require('./utils/get-repo')
+const abort = require('./utils/abort')
+const getCommits = require('./steps/get-commits')
 
 args
   .option('draft', `Don't publish the release right away`)
@@ -31,11 +32,6 @@ const flags = args.parse(process.argv)
 let spinner
 let githubConnection
 let repoDetails
-
-const abort = msg => {
-  console.error(`${red('Error!')} ${msg}`)
-  process.exit(1)
-}
 
 const newSpinner = message => {
   if (spinner) {
@@ -133,19 +129,6 @@ const connector = () => {
   return github
 }
 
-const getCommits = () => new Promise(resolve => {
-  const repoPath = path.join(process.cwd(), '.git')
-  const commits = []
-
-  gitCommits(repoPath).on('data', commit => {
-    commits.push(commit)
-  }).on('error', () => {
-    abort('Not able to collect commits.')
-  }).on('end', () => {
-    resolve(commits)
-  })
-})
-
 const typeDefined = text => {
   for (const type of changeTypes) {
     const handle = '(' + type.handle + ')'
@@ -156,30 +139,6 @@ const typeDefined = text => {
   }
 
   return false
-}
-
-const groupChanges = changes => {
-  const types = {}
-
-  for (const type of changeTypes) {
-    types[type.handle] = []
-  }
-
-  for (const change in changes) {
-    if (!{}.hasOwnProperty.call(changes, change)) {
-      continue
-    }
-
-    const changeType = changes[change]
-
-    if (changeType === 'ignore') {
-      continue
-    }
-
-    types[changeType].push(change)
-  }
-
-  return types
 }
 
 const cleanCommitTitle = title => {
@@ -240,22 +199,6 @@ const createChangelog = (types, commits) => {
 
   // Remove newlines from the end
   return stripWhitespace.right(text)
-}
-
-const getRepo = field => {
-  if (typeof field === 'string') {
-    if (isURL(field)) {
-      return parseRepo(field)
-    }
-
-    return parseRepo(`github:${field}`)
-  }
-
-  if (field.url) {
-    return parseRepo(field.url)
-  }
-
-  abort('Could not determine GitHub repository.')
 }
 
 const getReleaseURL = version => {
@@ -341,7 +284,7 @@ const orderCommits = (commits, latest, exists) => {
     newSpinner('Generating the changelog')
 
     const results = Object.assign({}, predefined, types)
-    const grouped = groupChanges(results)
+    const grouped = groupChanges(results, changeTypes)
     const changelog = createChangelog(grouped, commits)
 
     // Upload changelog to GitHub Releases

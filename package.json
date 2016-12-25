@@ -24,6 +24,7 @@
     "semicolon": false,
     "rules": {
       "import/no-dynamic-require": 0,
+      "unicorn/no-process-exit": 0,
       "camelcase": 0
     }
   },
