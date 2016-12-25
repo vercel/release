@@ -44,7 +44,7 @@ If you want to automate this even further, simply specify the change type of you
 
 > Error logging works now (patch)
 
-Assuming that you've defined the type of change for a certain commit, the package won't ask you to set a type for it manually.
+Assuming that you've defined the type of change for a certain commit, the package won't ask you to set a type for it manually. This will make the process of creating a release much faster!
 
 ## Why?
 
