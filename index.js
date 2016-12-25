@@ -264,7 +264,8 @@ const getReleaseURL = version => {
 }
 
 const createRelease = (tag_name, changelog, exists) => {
-  newSpinner('Uploading release' + (flags.draft ? ' as draft' : ''))
+  const isPre = flags.pre ? 'pre' : ''
+  newSpinner(`Uploading ${isPre}release` + (flags.draft ? ' as draft' : ''))
 
   const methodPrefix = exists ? 'edit' : 'create'
   const method = methodPrefix + 'Release'
