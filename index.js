@@ -23,6 +23,7 @@ const pkg = require('./package')
 
 args
   .option('draft', `Don't publish the release right away`)
+  .option('pre', 'Mark the release as prerelease')
   .option('overwrite', 'If the release already exists, replace it')
 
 const flags = args.parse(process.argv)
@@ -273,7 +274,8 @@ const createRelease = (tag_name, changelog, exists) => {
     repo: repoDetails.repo,
     tag_name,
     body: changelog,
-    draft: flags.draft
+    draft: flags.draft,
+    prerelease: flags.pre
   }
 
   if (exists) {
