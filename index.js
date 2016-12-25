@@ -137,9 +137,7 @@ const getCommits = () => new Promise(resolve => {
   const repoPath = path.join(process.cwd(), '.git')
   const commits = []
 
-  gitCommits(repoPath, {
-    limit: 10
-  }).on('data', commit => {
+  gitCommits(repoPath).on('data', commit => {
     commits.push(commit)
   }).on('error', () => {
     abort('Not able to collect commits.')
