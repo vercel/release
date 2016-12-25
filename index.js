@@ -17,10 +17,10 @@ const ora = require('ora')
 
 // Ours
 const pkg = require('./package')
-const groupChanges = require('./steps/group-changes')
-const getRepo = require('./utils/get-repo')
-const abort = require('./utils/abort')
-const getCommits = require('./steps/get-commits')
+const groupChanges = require('./lib/group-changes')
+const getRepo = require('./lib/get-repo')
+const abort = require('./lib/abort')
+const getCommits = require('./lib/get-commits')
 
 args
   .option('draft', `Don't publish the release right away`)
