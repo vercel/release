@@ -22,7 +22,10 @@ const parseRepo = require('github-url-to-object')
 const pkg = require('./package')
 
 args.parse(process.argv)
+
 let spinner
+let githubConnection
+let repoDetails
 
 const abort = msg => {
   console.error(`${red('Error!')} ${msg}`)
@@ -243,13 +246,10 @@ const getRepo = field => {
   abort('Could not determine GitHub repository.')
 }
 
-const createRelease = (tag_name, changelog, project) => {
-  const github = connector()
-  const repoDetails = getRepo(project.repository)
-
+const createRelease = (tag_name, changelog) => {
   newSpinner('Uploading release')
 
-  github.repos.createRelease({
+  githubConnection.repos.createRelease({
     owner: repoDetails.user,
     repo: repoDetails.repo,
     tag_name,
@@ -260,7 +260,7 @@ const createRelease = (tag_name, changelog, project) => {
   console.log(`\nDone! 🎉`)
 }
 
-const orderCommits = (commits, latest, project) => {
+const orderCommits = (commits, latest) => {
   const questions = []
   const predefined = {}
 
@@ -305,11 +305,11 @@ const orderCommits = (commits, latest, project) => {
     const changelog = createChangelog(grouped, commits)
 
     // Upload changelog to GitHub Releases
-    createRelease(latest.title, changelog, project)
+    createRelease(latest.title, changelog)
   })
 }
 
-const collectChanges = project => {
+const collectChanges = () => {
   newSpinner('Loading commit history')
 
   getCommits().then(commits => {
@@ -325,7 +325,30 @@ const collectChanges = project => {
       abort('The latest commit wasn\'t created by `npm version`.')
     }
 
-    orderCommits(commits, latestCommit, project)
+    orderCommits(commits, latestCommit)
+  })
+}
+
+const checkReleaseStatus = project => {
+  githubConnection = connector()
+  repoDetails = getRepo(project.repository)
+
+  newSpinner('Checking if release already exists')
+
+  githubConnection.repos.getReleaseByTag({
+    owner: repoDetails.user,
+    repo: repoDetails.repo,
+    tag: project.version
+  }, err => {
+    if (err) {
+      collectChanges()
+      return
+    }
+
+    spinner.succeed()
+
+    console.log('')
+    abort('Release already exists on GitHub.')
   })
 }
 
@@ -346,4 +369,4 @@ if (!info.version) {
   abort('No version field inside the package.json file.')
 }
 
-collectChanges(info)
+checkReleaseStatus(info)
