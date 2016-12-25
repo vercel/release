@@ -21,7 +21,10 @@ const parseRepo = require('github-url-to-object')
 // Ours
 const pkg = require('./package')
 
-args.option('draft', `Don't publish the release right away`)
+args
+  .option('draft', `Don't publish the release right away`)
+  .option('overwrite', 'If the release already exists, replace it')
+
 const flags = args.parse(process.argv)
 
 let spinner
@@ -259,24 +262,32 @@ const getReleaseURL = version => {
   return releaseURL
 }
 
-const createRelease = (tag_name, changelog) => {
+const createRelease = (tag_name, changelog, exists) => {
   newSpinner('Uploading release' + (flags.draft ? ' as draft' : ''))
 
-  githubConnection.repos.createRelease({
+  const methodPrefix = exists ? 'edit' : 'create'
+  const method = methodPrefix + 'Release'
+
+  const body = {
     owner: repoDetails.user,
     repo: repoDetails.repo,
     tag_name,
     body: changelog,
     draft: flags.draft
-  })
+  }
 
+  if (exists) {
+    body.id = exists
+  }
+
+  githubConnection.repos[method](body)
   spinner.succeed()
 
   console.log(`\nDone! 🎉`)
   console.log(`Here's the release: ${getReleaseURL(tag_name)}`)
 }
 
-const orderCommits = (commits, latest) => {
+const orderCommits = (commits, latest, exists) => {
   const questions = []
   const predefined = {}
 
@@ -321,11 +332,11 @@ const orderCommits = (commits, latest) => {
     const changelog = createChangelog(grouped, commits)
 
     // Upload changelog to GitHub Releases
-    createRelease(latest.title, changelog)
+    createRelease(latest.title, changelog, exists)
   })
 }
 
-const collectChanges = () => {
+const collectChanges = exists => {
   newSpinner('Loading commit history')
 
   getCommits().then(commits => {
@@ -341,7 +352,7 @@ const collectChanges = () => {
       abort('The latest commit wasn\'t created by `npm version`.')
     }
 
-    orderCommits(commits, latestCommit)
+    orderCommits(commits, latestCommit, exists)
   })
 }
 
@@ -355,9 +366,18 @@ const checkReleaseStatus = project => {
     owner: repoDetails.user,
     repo: repoDetails.repo,
     tag: project.version
-  }, err => {
+  }, (err, response) => {
     if (err) {
-      collectChanges()
+      collectChanges(false)
+      return
+    }
+
+    if (flags.overwrite) {
+      spinner.text = 'Overwriting release, because it already exists'
+    }
+
+    if (flags.overwrite) {
+      collectChanges(response.id)
       return
     }
 
