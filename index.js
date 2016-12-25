@@ -311,10 +311,6 @@ const orderCommits = (commits, latest, exists) => {
   commits.reverse()
 
   for (const commit of commits) {
-    if (semVer.valid(commit.title)) {
-      continue
-    }
-
     const isDef = typeDefined
     const definition = isDef(commit.title) || isDef(commit.description)
 
@@ -357,7 +353,7 @@ const collectChanges = exists => {
   newSpinner('Loading commit history')
 
   getCommits().then(commits => {
-    const latestCommit = commits[0]
+    const latestCommit = commits.shift()
 
     if (!latestCommit) {
       failSpinner('Could not load latest commits.')
@@ -367,6 +363,18 @@ const collectChanges = exists => {
 
     if (!isTag) {
       failSpinner('The latest commit wasn\'t created by `npm version`.')
+    }
+
+    for (const commit of commits) {
+      if (semVer.valid(commit.title)) {
+        const index = commits.indexOf(commit)
+        commits = commits.slice(0, index)
+        break
+      }
+    }
+
+    if (commits.length < 1) {
+      failSpinner('No changes happened since the last release.')
     }
 
     orderCommits(commits, latestCommit, exists)
