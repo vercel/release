@@ -348,7 +348,11 @@ const checkReleaseStatus = project => {
     spinner.succeed()
 
     console.log('')
-    const releaseURL = `https://github.com/${repoDetails.user}/${repoDetails.repo}/releases/tag/${project.version}`
+
+    let releaseURL = `https://github.com/${repoDetails.user}`
+    releaseURL += `/${repoDetails.repo}/releases`
+    releaseURL += `/tag/${project.version}`
+
     abort(`Release already exists: ${releaseURL}`)
   })
 }
