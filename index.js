@@ -45,6 +45,15 @@ const newSpinner = message => {
   spinner = ora(message).start()
 }
 
+const failSpinner = message => {
+  if (spinner) {
+    spinner.fail()
+  }
+
+  console.log('')
+  abort(message)
+}
+
 const changeTypes = [
   {
     handle: 'major',
@@ -308,6 +317,8 @@ const orderCommits = (commits, latest, exists) => {
       continue
     }
 
+    console.log(commit)
+
     const definition = typeDefined(commit.title)
 
     if (definition) {
@@ -352,13 +363,13 @@ const collectChanges = exists => {
     const latestCommit = commits[0]
 
     if (!latestCommit) {
-      abort('Could not load latest commits.')
+      failSpinner('Could not load latest commits.')
     }
 
     const isTag = semVer.valid(latestCommit.title)
 
     if (!isTag) {
-      abort('The latest commit wasn\'t created by `npm version`.')
+      failSpinner('The latest commit wasn\'t created by `npm version`.')
     }
 
     orderCommits(commits, latestCommit, exists)
