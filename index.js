@@ -288,10 +288,11 @@ const orderCommits = (commits, latest, project) => {
   }
 
   spinner.succeed()
-  console.log(`${green('!')} Please enter the type of change for each commit:\n\n`)
+  console.log(`${green('!')} Please enter the type of change for each commit:\n`)
 
   inquirer.prompt(questions).then(types => {
     // Update the spinner status
+    console.log('')
     newSpinner('Generating the changelog')
 
     const results = Object.assign({}, predefined, types)
