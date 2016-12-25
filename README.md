@@ -40,9 +40,11 @@ When running the `release` command, you'll be asked to provide the type for all 
 
 ### Pre-Defining the Type of a Commit
 
-If you want to automate this even further, simply specify the change type of your commits by adding it to the title or description. Here's an example of how such a commit title could look like:
+If you want to automate this even further, simply specify the change type of your commits by adding it to the **title** or **description**. Simply include it within parenthesis:
 
-> Fixed error logging (patch)
+```bash
+git commit -m "Error logging works now (patch)"
+```
 
 ## Why?
 
