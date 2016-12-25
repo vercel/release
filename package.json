@@ -5,6 +5,10 @@
   "scripts": {
     "test": "xo"
   },
+  "files": [
+    "lib",
+    "index.js"
+  ],
   "repository": "zeit/release",
   "keywords": [
     "github",
