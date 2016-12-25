@@ -21,7 +21,8 @@ const parseRepo = require('github-url-to-object')
 // Ours
 const pkg = require('./package')
 
-args.parse(process.argv)
+args.option('draft', `Don't publish the release right away`)
+const flags = args.parse(process.argv)
 
 let spinner
 let githubConnection
@@ -247,13 +248,14 @@ const getRepo = field => {
 }
 
 const createRelease = (tag_name, changelog) => {
-  newSpinner('Uploading release')
+  newSpinner('Uploading release' + (flags.draft ? ' as draft' : ''))
 
   githubConnection.repos.createRelease({
     owner: repoDetails.user,
     repo: repoDetails.repo,
     tag_name,
-    body: changelog
+    body: changelog,
+    draft: flags.draft
   })
 
   spinner.succeed()
