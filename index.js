@@ -288,6 +288,11 @@ const orderCommits = (commits, latest, project) => {
   }
 
   spinner.succeed()
+
+  // Prevents the spinner from getting succeeded
+  // again once new spinner gets created
+  spinner = false
+
   console.log(`${green('!')} Please enter the type of change for each commit:\n`)
 
   inquirer.prompt(questions).then(types => {
