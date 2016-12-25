@@ -280,11 +280,17 @@ const createRelease = (tag_name, changelog, exists) => {
     body.id = exists
   }
 
-  githubConnection.repos[method](body)
-  spinner.succeed()
+  githubConnection.repos[method](body, err => {
+    if (err) {
+      console.log('\n')
+      abort('Failed to upload release.')
+    }
 
-  console.log(`\nDone! 🎉`)
-  console.log(`Here's the release: ${getReleaseURL(tag_name)}`)
+    spinner.succeed()
+
+    console.log(`\nDone! 🎉`)
+    console.log(`Here's the release: ${getReleaseURL(tag_name)}`)
+  })
 }
 
 const orderCommits = (commits, latest, exists) => {
