@@ -28,17 +28,17 @@ Simply run this command to get a list of all available options:
 $ release -h
 ```
 
-### Change Types
+## Change Types
 
 As described in the [Semantic Versioning](http://semver.org/#summary) guide, each commit can fall into one of these categories:
 
-- **Major Change** (incompatible API change)
-- **Minor Change** (backwards-compatible functionality)
-- **Patch** (backwards-compatible bug fix)
+- **Major Changes** (incompatible API changes)
+- **Minor Changes** (functionality in a backwards-compatible manner)
+- **Patches** (backwards-compatible bug fixes)
 
-After running the `release` command, you'll be asked to provide a type for the commits you've created since the last release. This allows the package to automatically generate a proper changelog for you.
+When running the `release` command, you'll be asked to provide the type for all of the commits you've created since the last release. This allows the package to automatically generate a proper changelog for you.
 
-#### Pre-Defining the Type of a Commit
+### Pre-Defining the Type of a Commit
 
 If you want to automate this even further, simply specify the change type of your commits by adding it to the title or description. Here's an example of how such a commit title could look like:
 
