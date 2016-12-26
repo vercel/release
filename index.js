@@ -6,7 +6,7 @@ const path = require('path')
 // Packages
 const GitHubAPI = require('github')
 const args = require('args')
-const {green} = require('chalk')
+const chalk = require('chalk')
 const semVer = require('semver')
 const inquirer = require('inquirer')
 const ora = require('ora')
@@ -128,8 +128,8 @@ const createRelease = (tag_name, changelog, exists) => {
 
     spinner.succeed()
 
-    console.log(`\nDone! 🎉`)
-    console.log(`Here's the release: ${getReleaseURL(tag_name)}`)
+    console.log(`\n${chalk.bold('Done!')} 🎉 Opening release in browser...`)
+    open(getReleaseURL(tag_name))
   })
 }
 
@@ -165,7 +165,7 @@ const orderCommits = (commits, latest, exists) => {
   // again once new spinner gets created
   spinner = false
 
-  console.log(`${green('!')} Please enter the type of change for each commit:\n`)
+  console.log(`${chalk.green('!')} Please enter the type of change for each commit:\n`)
 
   inquirer.prompt(questions).then(types => {
     // Update the spinner status
