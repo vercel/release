@@ -181,7 +181,7 @@ const orderCommits = (commits, latest, exists) => {
   })
 }
 
-const collectChanges = exists => {
+const collectChanges = (exists = false) => {
   newSpinner('Loading commit history')
 
   getCommits().then(commits => {
@@ -219,14 +219,26 @@ const checkReleaseStatus = project => {
 
   newSpinner('Checking if release already exists')
 
-  githubConnection.repos.getReleaseByTag({
+  githubConnection.repos.getReleases({
     owner: repoDetails.user,
-    repo: repoDetails.repo,
-    tag: project.version
+    repo: repoDetails.repo
   }, (err, response) => {
     if (err) {
-      collectChanges(false)
+      failSpinner(`Couldn't check if release exists.`)
+    }
+
+    if (response.length < 1) {
+      collectChanges()
       return
+    }
+
+    let existingRelease
+
+    for (const release of response) {
+      if (release.tag_name === project.version) {
+        existingRelease = release
+        break
+      }
     }
 
     if (flags.overwrite) {
@@ -234,14 +246,14 @@ const checkReleaseStatus = project => {
     }
 
     if (flags.overwrite) {
-      collectChanges(response.id)
+      collectChanges(existingRelease.id)
       return
     }
 
     spinner.succeed()
     console.log('')
 
-    const releaseURL = getReleaseURL(response)
+    const releaseURL = getReleaseURL(existingRelease)
 
     if (releaseURL) {
       open(releaseURL)
