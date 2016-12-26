@@ -195,7 +195,7 @@ const collectChanges = (exists = false) => {
 }
 
 const connector = async () => {
-  newSpinner('Searching for GitHub token on device')
+  newSpinner('Waiting for verification')
 
   let token
 
