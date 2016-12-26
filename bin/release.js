@@ -15,7 +15,7 @@ const groupChanges = require('../lib/group')
 const {branchSynced, getRepo} = require('../lib/repo')
 const getCommits = require('../lib/commits')
 const getChoices = require('../lib/choices')
-const typeDefined = require('../lib/type')
+const definitions = require('../lib/definitions')
 const connect = require('../lib/connect')
 const createChangelog = require('../lib/changelog')
 const handleSpinner = require('../lib/spinner')
@@ -101,8 +101,8 @@ const orderCommits = (commits, latest, exists) => {
   commits.reverse()
 
   for (const commit of commits) {
-    const defTitle = typeDefined(commit.title, changeTypes)
-    const defDescription = typeDefined(commit.description, changeTypes)
+    const defTitle = definitions.type(commit.title, changeTypes)
+    const defDescription = definitions.type(commit.description, changeTypes)
 
     const definition = defTitle || defDescription
 
