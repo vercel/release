@@ -1,4 +1,4 @@
-# release
+![](https://raw.githubusercontent.com/zeit/art/10c6a40bfcadf774b3a9e62d01dc44201372443c/release/repo-banner-white.png)
 
 [![Build Status](https://travis-ci.com/zeit/release.svg?token=CPbpm6MRBVbWVmDFaLxs&branch=master)](https://travis-ci.com/zeit/release)
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
