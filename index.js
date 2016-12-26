@@ -24,7 +24,6 @@ const findToken = require('./lib/token')
 const createChangelog = require('./lib/changelog')
 
 args
-  .option('draft', `Don't publish the release right away`)
   .option('pre', 'Mark the release as prerelease')
   .option('overwrite', 'If the release already exists, replace it')
 
@@ -102,7 +101,7 @@ const getReleaseURL = version => {
 
 const createRelease = (tag_name, changelog, exists) => {
   const isPre = flags.pre ? 'pre' : ''
-  newSpinner(`Uploading ${isPre}release` + (flags.draft ? ' as draft' : ''))
+  newSpinner(`Uploading ${isPre}release`)
 
   const methodPrefix = exists ? 'edit' : 'create'
   const method = methodPrefix + 'Release'
@@ -112,7 +111,7 @@ const createRelease = (tag_name, changelog, exists) => {
     repo: repoDetails.repo,
     tag_name,
     body: changelog,
-    draft: flags.draft,
+    draft: true,
     prerelease: flags.pre
   }
 
