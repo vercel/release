@@ -232,7 +232,7 @@ const checkReleaseStatus = project => {
       return
     }
 
-    let existingRelease
+    let existingRelease = null
 
     for (const release of response) {
       if (release.tag_name === project.version) {
@@ -241,12 +241,15 @@ const checkReleaseStatus = project => {
       }
     }
 
-    if (flags.overwrite) {
-      spinner.text = 'Overwriting release, because it already exists'
+    if (!existingRelease) {
+      collectChanges()
+      return
     }
 
     if (flags.overwrite) {
+      spinner.text = 'Overwriting release, because it already exists'
       collectChanges(existingRelease.id)
+
       return
     }
 
