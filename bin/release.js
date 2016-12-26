@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --harmony-async-await
 
 // Native
 const path = require('path')
@@ -67,25 +67,6 @@ const changeTypes = [
     description: 'backwards-compatible bug fix'
   }
 ]
-
-const connector = () => {
-  newSpinner('Searching for GitHub token on device')
-  const token = findToken()
-
-  const github = new GitHubAPI({
-    protocol: 'https',
-    headers: {
-      'user-agent': `Release v${pkg.version}`
-    }
-  })
-
-  github.authenticate({
-    type: 'token',
-    token
-  })
-
-  return github
-}
 
 const getReleaseURL = (release, edit = false) => {
   if (!release || !release.html_url) {
@@ -213,8 +194,34 @@ const collectChanges = (exists = false) => {
   })
 }
 
-const checkReleaseStatus = project => {
-  githubConnection = connector()
+const connector = async () => {
+  newSpinner('Searching for GitHub token on device')
+
+  let token
+
+  try {
+    token = await findToken()
+  } catch (err) {
+    failSpinner(`Couldn't load token.`)
+  }
+
+  const github = new GitHubAPI({
+    protocol: 'https',
+    headers: {
+      'user-agent': `Release v${pkg.version}`
+    }
+  })
+
+  github.authenticate({
+    type: 'token',
+    token
+  })
+
+  return github
+}
+
+const checkReleaseStatus = async project => {
+  githubConnection = await connector()
   repoDetails = getRepo(project.repository)
 
   newSpinner('Checking if release already exists')
@@ -283,4 +290,6 @@ if (!info.version) {
   abort('No version field inside the package.json file.')
 }
 
-checkReleaseStatus(info)
+setTimeout(async () => {
+  await checkReleaseStatus(info)
+}, 100)
