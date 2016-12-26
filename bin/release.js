@@ -12,7 +12,7 @@ const open = require('open')
 
 // Ours
 const groupChanges = require('../lib/group')
-const getRepo = require('../lib/repo')
+const {branchSynced, getRepo} = require('../lib/repo')
 const getCommits = require('../lib/commits')
 const getChoices = require('../lib/choices')
 const typeDefined = require('../lib/type')
@@ -174,6 +174,10 @@ const collectChanges = (exists = false) => {
 }
 
 const checkReleaseStatus = async project => {
+  if (!await branchSynced()) {
+    handleSpinner.fail('Your branch needs to be up-to-date with origin.')
+  }
+
   githubConnection = await connect()
   repoDetails = getRepo(project.repository)
 
