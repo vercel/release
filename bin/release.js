@@ -20,7 +20,7 @@ const abort = require('../lib/abort')
 const getCommits = require('../lib/commits')
 const getChoices = require('../lib/choices')
 const typeDefined = require('../lib/type')
-const findToken = require('../lib/token')
+const {loadToken, requestToken} = require('../lib/token')
 const createChangelog = require('../lib/changelog')
 
 args
@@ -195,14 +195,16 @@ const collectChanges = (exists = false) => {
 }
 
 const connector = async () => {
-  newSpinner('Waiting for verification')
+  let token = await loadToken()
 
-  let token
+  if (!token) {
+    newSpinner('Waiting for confirmation...')
 
-  try {
-    token = await findToken()
-  } catch (err) {
-    failSpinner(`Couldn't load token.`)
+    try {
+      token = await requestToken()
+    } catch (err) {
+      failSpinner(`Couldn't load token.`)
+    }
   }
 
   const github = new GitHubAPI({
