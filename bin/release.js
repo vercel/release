@@ -13,7 +13,6 @@ const open = require('open')
 // Ours
 const groupChanges = require('../lib/group')
 const getRepo = require('../lib/repo')
-const abort = require('../lib/abort')
 const getCommits = require('../lib/commits')
 const getChoices = require('../lib/choices')
 const typeDefined = require('../lib/type')
@@ -80,7 +79,7 @@ const createRelease = (tag_name, changelog, exists) => {
   githubConnection.repos[method](body, (err, response) => {
     if (err) {
       console.log('\n')
-      abort('Failed to upload release.')
+      handleSpinner.fail('Failed to upload release.')
     }
 
     global.spinner.succeed()
@@ -223,7 +222,10 @@ const checkReleaseStatus = async project => {
       open(releaseURL)
     }
 
-    abort(`Release already exists. Opening in browser...`)
+    const alreadyThere = 'Release already exists. Opening in browser...'
+    console.error(`${chalk.red('Error!')} ` + alreadyThere)
+
+    process.exit(1)
   })
 }
 
@@ -233,15 +235,15 @@ let info
 try {
   info = require(infoPath)
 } catch (err) {
-  abort('Could not find a package.json file.')
+  handleSpinner.fail('Could not find a package.json file.')
 }
 
 if (!info.repository) {
-  abort('No repository field inside the package.json file.')
+  handleSpinner.fail('No repository field inside the package.json file.')
 }
 
 if (!info.version) {
-  abort('No version field inside the package.json file.')
+  handleSpinner.fail('No version field inside the package.json file.')
 }
 
 checkReleaseStatus(info)
