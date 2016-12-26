@@ -87,16 +87,13 @@ const connector = () => {
   return github
 }
 
-const getReleaseURL = version => {
-  if (!repoDetails) {
-    return ''
+const getReleaseURL = (release, edit = false) => {
+  if (!release || !release.html_url) {
+    return false
   }
 
-  let releaseURL = `https://github.com/${repoDetails.user}`
-  releaseURL += `/${repoDetails.repo}/releases`
-  releaseURL += `/tag/${version}`
-
-  return releaseURL
+  const htmlURL = release.html_url
+  return edit ? htmlURL.replace('/tag/', '/edit/') : htmlURL
 }
 
 const createRelease = (tag_name, changelog, exists) => {
@@ -119,16 +116,20 @@ const createRelease = (tag_name, changelog, exists) => {
     body.id = exists
   }
 
-  githubConnection.repos[method](body, err => {
+  githubConnection.repos[method](body, (err, response) => {
     if (err) {
       console.log('\n')
       abort('Failed to upload release.')
     }
 
     spinner.succeed()
+    const releaseURL = getReleaseURL(response, true)
+
+    if (releaseURL) {
+      open(releaseURL)
+    }
 
     console.log(`\n${chalk.bold('Done!')} 🎉 Opening release in browser...`)
-    open(getReleaseURL(tag_name))
   })
 }
 
@@ -240,7 +241,12 @@ const checkReleaseStatus = project => {
     spinner.succeed()
     console.log('')
 
-    open(getReleaseURL(project.version))
+    const releaseURL = getReleaseURL(response)
+
+    if (releaseURL) {
+      open(releaseURL)
+    }
+
     abort(`Release already exists. Opening in browser...`)
   })
 }
