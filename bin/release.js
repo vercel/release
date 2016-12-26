@@ -290,6 +290,4 @@ if (!info.version) {
   abort('No version field inside the package.json file.')
 }
 
-setTimeout(async () => {
-  await checkReleaseStatus(info)
-}, 100)
+checkReleaseStatus(info)
