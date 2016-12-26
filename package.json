@@ -32,6 +32,9 @@
       "camelcase": 0
     }
   },
+  "engines": {
+    "node": ">= 7.0.0"
+  },
   "bugs": {
     "url": "https://github.com/zeit/release/issues"
   },
