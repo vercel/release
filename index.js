@@ -10,6 +10,7 @@ const {green} = require('chalk')
 const semVer = require('semver')
 const inquirer = require('inquirer')
 const ora = require('ora')
+const open = require('open')
 
 // Ours
 const pkg = require('./package')
@@ -240,8 +241,8 @@ const checkReleaseStatus = project => {
     spinner.succeed()
     console.log('')
 
-    const releaseURL = getReleaseURL(project.version)
-    abort(`Release already exists: ${releaseURL}`)
+    open(getReleaseURL(project.version))
+    abort(`Release already exists. Opening in browser...`)
   })
 }
 
