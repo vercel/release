@@ -6,8 +6,8 @@
     "test": "xo"
   },
   "files": [
-    "lib",
-    "index.js"
+    "bin",
+    "lib"
   ],
   "repository": "zeit/release",
   "keywords": [
