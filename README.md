@@ -4,7 +4,7 @@
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 [![Slack Channel](https://zeit-slackin.now.sh/badge.svg)](https://zeit.chat)
 
-When run, this command line interface automatically generates a new [GitHub Release](https://help.github.com/articles/creating-releases/) and populates it with the changes (commits) added since the last release.
+When run, this command line interface automatically generates a new draft for a [GitHub Release](https://help.github.com/articles/creating-releases/) and populates it with the changes (commits) made since the last release.
 
 ## Usage
 
@@ -22,7 +22,7 @@ $ release
 
 ### Options
 
-Simply run this command to get a list of all available options:
+The following command will show you a list of all available options:
 
 ```bash
 $ release -h
@@ -30,25 +30,25 @@ $ release -h
 
 ## Change Types
 
-As described in the [SemVer guide](http://semver.org/#summary), each commit can fall into one of these categories:
+As described in the [Semantic Versioning guide](http://semver.org/#summary), a commit falls into one of these categories:
 
 - **Major Changes** (incompatible API changes)
 - **Minor Changes** (functionality in a backwards-compatible manner)
 - **Patches** (backwards-compatible bug fixes)
 
-When running the `release` command, you'll be asked to provide the type for all of the commits you've created since the last release. This allows the package to automatically generate a proper changelog for you.
+When running the `release` command, you'll be asked to provide the types for all of the commits you've created since the last release. This allows the package to automatically generate a proper changelog for you.
 
 ### Pre-Defining the Type of a Commit
 
-If you want to automate this even further, simply specify the change type of your commits by adding it to the **title** or **description** within parenthesis:
+If you want to automate this even further, specify the change type of your commits by adding it to the **title** or **description** within parenthesis:
 
 > Error logging works now (patch)
 
-Assuming that you've defined the type of change for a certain commit, the package won't ask you to set a type for it manually. This will make the process of creating a release much faster!
+Assuming that you've defined it for a certain commit, the package won't ask you to set a type for it manually. This will make the process of creating a release much faster.
 
 ## Why?
 
-As we at [ZEIT](https://github.com/zeit) moved all of our GitHub repositories from keeping a `HISTORY.md` file to using [GitHub Releases](https://help.github.com/articles/creating-releases/), we needed a way to automatically generate these releases from our own devices, rather than always having to open a page in the browser and manually add all commits titles to a certain version tag.
+As we at [ZEIT](https://github.com/zeit) moved all of our GitHub repositories from keeping a `HISTORY.md` file to using [GitHub Releases](https://help.github.com/articles/creating-releases/), we needed a way to automatically generate these releases from our own devices, rather than always having to open a page in the browser and manually add the notes for each change.
 
 ## Contributing
 
