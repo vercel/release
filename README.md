@@ -58,3 +58,11 @@ As we at [ZEIT](https://github.com/zeit) moved all of our GitHub repositories fr
 4. You can now use `release` on the command line!
 
 As always, you can use `npm test` to run the tests and see if your changes have broken anything.
+
+## Credits
+
+Thanks a lot to [Daniel Chatfield](https://github.com/danielchatfield) for donating the "release" name on [npm](https://www.npmjs.com) and [my lovely team](https://zeit.co/about) for telling me about their needs and how I can make this package as efficient as possible.
+
+## Author
+
+Leo Lamprecht ([@notquiteleo](https://twitter.com/notquiteleo)) - [▲ZEIT](https://zeit.co)
