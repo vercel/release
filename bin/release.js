@@ -91,7 +91,7 @@ const createRelease = (tag_name, changelog, exists) => {
   })
 }
 
-const orderCommits = (commits, latest, exists) => {
+const orderCommits = (commits, tags, exists) => {
   const questions = []
   const predefined = {}
 
@@ -113,7 +113,7 @@ const orderCommits = (commits, latest, exists) => {
       name: commit.hash,
       message: commit.title,
       type: 'list',
-      choices: getChoices(changeTypes)
+      choices: getChoices(changeTypes, tags)
     })
   }
 
@@ -135,7 +135,7 @@ const orderCommits = (commits, latest, exists) => {
     const changelog = createChangelog(grouped, commits, changeTypes)
 
     // Upload changelog to GitHub Releases
-    createRelease(latest.version, changelog, exists)
+    createRelease(tags[0].version, changelog, exists)
   })
 }
 
@@ -169,7 +169,7 @@ const collectChanges = (tags, exists = false) => {
       handleSpinner.fail('No changes happened since the last release.')
     }
 
-    orderCommits(commits, tags[0], exists)
+    orderCommits(commits, tags, exists)
   })
 }
 
