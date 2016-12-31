@@ -1,14 +1,12 @@
 #!/usr/bin/env node --harmony-async-await
 
-// Native
-const path = require('path')
-
 // Packages
 const args = require('args')
 const chalk = require('chalk')
 const semVer = require('semver')
 const inquirer = require('inquirer')
 const open = require('open')
+const taggedVersions = require('tagged-versions')
 
 // Ours
 const groupChanges = require('../lib/group')
@@ -137,29 +135,24 @@ const orderCommits = (commits, latest, exists) => {
     const changelog = createChangelog(grouped, commits, changeTypes)
 
     // Upload changelog to GitHub Releases
-    createRelease(latest.title, changelog, exists)
+    createRelease(latest.version, changelog, exists)
   })
 }
 
-const collectChanges = (exists = false) => {
+const collectChanges = (tags, exists = false) => {
   handleSpinner.create('Loading commit history')
 
   getCommits().then(commits => {
-    const latestCommit = commits.shift()
+    const lastRelease = tags[1]
 
-    if (!latestCommit) {
-      handleSpinner.fail('Could not load latest commits.')
-    }
-
-    const isTag = semVer.valid(latestCommit.title)
-
-    if (!isTag) {
-      handleSpinner.fail('The latest commit wasn\'t created by `npm version`.')
+    if (!lastRelease) {
+      handleSpinner.fail('The first release should be created manually.')
     }
 
     for (const commit of commits) {
-      if (semVer.valid(commit.title)) {
-        const index = commits.indexOf(commit)
+      const index = commits.indexOf(commit)
+
+      if (commit.hash === lastRelease.hash && index > 0) {
         commits = commits.slice(0, index)
         break
       }
@@ -169,11 +162,23 @@ const collectChanges = (exists = false) => {
       handleSpinner.fail('No changes happened since the last release.')
     }
 
-    orderCommits(commits, latestCommit, exists)
+    orderCommits(commits, tags[0], exists)
   })
 }
 
-const checkReleaseStatus = async project => {
+const checkReleaseStatus = async () => {
+  let tags
+
+  try {
+    tags = await taggedVersions.getList()
+  } catch (err) {
+    handleSpinner.fail('Directory is not a Git repository.')
+  }
+
+  if (tags.length < 1) {
+    handleSpinner.fail('No tags available for release.')
+  }
+
   if (!await branchSynced()) {
     handleSpinner.fail('Your branch needs to be up-to-date with origin.')
   }
@@ -192,27 +197,27 @@ const checkReleaseStatus = async project => {
     }
 
     if (response.length < 1) {
-      collectChanges()
+      collectChanges(tags)
       return
     }
 
     let existingRelease = null
 
     for (const release of response) {
-      if (release.tag_name === project.version) {
+      if (release.tag_name === tags[0].version) {
         existingRelease = release
         break
       }
     }
 
     if (!existingRelease) {
-      collectChanges()
+      collectChanges(tags)
       return
     }
 
     if (flags.overwrite) {
       global.spinner.text = 'Overwriting release, because it already exists'
-      collectChanges(existingRelease.id)
+      collectChanges(tags, existingRelease.id)
 
       return
     }
@@ -233,21 +238,4 @@ const checkReleaseStatus = async project => {
   })
 }
 
-const infoPath = path.join(process.cwd(), 'package.json')
-let info
-
-try {
-  info = require(infoPath)
-} catch (err) {
-  handleSpinner.fail('Could not find a package.json file.')
-}
-
-if (!info.repository) {
-  handleSpinner.fail('No repository field inside the package.json file.')
-}
-
-if (!info.version) {
-  handleSpinner.fail('No version field inside the package.json file.')
-}
-
-checkReleaseStatus(info)
+checkReleaseStatus()
