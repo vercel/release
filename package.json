@@ -62,6 +62,7 @@
     "request": "^2.79.0",
     "request-promise-native": "^1.0.3",
     "semver": "^5.3.0",
+    "then-sleep": "^1.0.1",
     "trim": "0.0.1"
   }
 }
