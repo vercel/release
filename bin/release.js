@@ -179,7 +179,7 @@ const checkReleaseStatus = async project => {
   }
 
   githubConnection = await connect()
-  repoDetails = await getRepo(project.repository)
+  repoDetails = await getRepo()
 
   handleSpinner.create('Checking if release already exists')
 
