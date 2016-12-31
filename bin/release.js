@@ -158,6 +158,13 @@ const collectChanges = (tags, exists = false) => {
       }
     }
 
+    for (const commit of commits) {
+      if (semVer.valid(commit.title)) {
+        const index = commits.indexOf(commit)
+        commits.splice(index, 1)
+      }
+    }
+
     if (commits.length < 1) {
       handleSpinner.fail('No changes happened since the last release.')
     }
