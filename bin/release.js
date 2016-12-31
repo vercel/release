@@ -95,6 +95,8 @@ const orderCommits = (commits, tags, exists) => {
   const questions = []
   const predefined = {}
 
+  const choices = getChoices(changeTypes, tags)
+
   // Show the latest changes first
   commits.reverse()
 
@@ -113,7 +115,7 @@ const orderCommits = (commits, tags, exists) => {
       name: commit.hash,
       message: commit.title,
       type: 'list',
-      choices: getChoices(changeTypes, tags)
+      choices
     })
   }
 
