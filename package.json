@@ -51,7 +51,7 @@
     "git-commits": "^1.2.0",
     "git-repo-name": "^0.6.0",
     "git-state": "^3.1.0",
-    "git-username": "^0.4.0",
+    "git-username": "^0.5.0",
     "github": "^7.1.0",
     "inquirer": "^2.0.0",
     "open": "0.0.5",
