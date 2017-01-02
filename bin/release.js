@@ -1,5 +1,6 @@
 #!/bin/bash
 // >&/dev/null;exec node --harmony-async-await $0
+// vi:syntax=javascript
 
 // Packages
 const args = require('args')
