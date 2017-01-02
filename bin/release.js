@@ -1,5 +1,5 @@
-#!/bin/sh
-// >&/dev/null;exec node --harmony_async_await $0
+#!/bin/bash
+// >&/dev/null;exec node --harmony-async-await $0
 
 // Packages
 const args = require('args')
