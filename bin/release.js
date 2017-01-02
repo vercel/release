@@ -8,6 +8,7 @@ const semVer = require('semver')
 const inquirer = require('inquirer')
 const open = require('open')
 const taggedVersions = require('tagged-versions')
+const updateNotifier = require('update-notifier')
 
 // Ours
 const groupChanges = require('../lib/group')
@@ -18,6 +19,7 @@ const definitions = require('../lib/definitions')
 const connect = require('../lib/connect')
 const createChangelog = require('../lib/changelog')
 const handleSpinner = require('../lib/spinner')
+const pkg = require('../package')
 
 args
   .option('pre', 'Mark the release as prerelease')
@@ -45,6 +47,9 @@ const changeTypes = [
     description: 'backwards-compatible bug fix'
   }
 ]
+
+// Let people know when there's an update
+updateNotifier({pkg}).notify()
 
 const getReleaseURL = (release, edit = false) => {
   if (!release || !release.html_url) {
