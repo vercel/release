@@ -52,6 +52,8 @@ As we at [ZEIT](https://github.com/zeit) moved all of our GitHub repositories fr
 
 ## Contributing
 
+You can find the authentication flow [here](https://github.com/zeit/release-auth).
+
 1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
 2. Uninstall the package if it's already installed: `npm uninstall -g release`
 3. Link the package to the global module directory: `npm link`
