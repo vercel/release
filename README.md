@@ -25,7 +25,7 @@ $ release
 The following command will show you a list of all available options:
 
 ```bash
-$ release -h
+$ release help
 ```
 
 ## Change Types
