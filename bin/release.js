@@ -1,5 +1,5 @@
 #!/bin/bash
-// >&/dev/null;exec node --harmony-async-await $0
+// >&/dev/null;exec node --harmony-async-await $0 $@
 // vi:syntax=javascript
 
 // Packages
