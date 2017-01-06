@@ -3,7 +3,8 @@
   "version": "1.0.7",
   "description": "Manage GitHub Releases from the command line",
   "scripts": {
-    "test": "xo"
+    "test": "xo",
+    "preinstall": "lib/preinstall.js"
   },
   "files": [
     "bin",
