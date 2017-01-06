@@ -28,6 +28,35 @@ The following command will show you a list of all available options:
 release help
 ```
 
+### Example
+
+After [installing](https://github.com/zeit/release) the package, move into the directory of your project:
+
+```bash
+cd <your-projects-path>
+```
+
+Inside the directory, make sure you've committed and pushed everything. If it says "your branch is up-to-date", you're fine. Otherwise, please commit things that haven't already been committed and push the remaining commits to the origin.
+
+```bash
+git status
+```
+
+Once you're sure that the branch is up-to-date, create a new [Git Tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging) and push it:
+
+```bash
+git tag <version-number>
+git push --tags
+```
+
+Now you're good to run this command (which will create a [GitHub Release](https://help.github.com/articles/creating-releases/) for you):
+
+```bash
+release
+```
+
+Done! It's that easy. 🎉
+
 ## Change Types
 
 As described in the [Semantic Versioning guide](http://semver.org/#summary), a commit falls into one of these categories:
