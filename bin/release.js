@@ -134,14 +134,14 @@ const orderCommits = (commits, tags, exists) => {
 
   console.log(`${chalk.green('!')} Please enter the type of change for each commit:\n`)
 
-  inquirer.prompt(questions).then(types => {
+  inquirer.prompt(questions).then(async types => {
     // Update the spinner status
     console.log('')
     handleSpinner.create('Generating the changelog')
 
     const results = Object.assign({}, predefined, types)
     const grouped = groupChanges(results, changeTypes)
-    const changelog = createChangelog(grouped, commits, changeTypes)
+    const changelog = await createChangelog(grouped, commits, changeTypes)
 
     // Upload changelog to GitHub Releases
     createRelease(tags[0].version, changelog, exists)
