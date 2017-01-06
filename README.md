@@ -36,11 +36,13 @@ After [installing](https://github.com/zeit/release) the package, move into the d
 cd <your-projects-path>
 ```
 
-Inside the directory, make sure you've committed and pushed everything. If it says "your branch is up-to-date", you're fine. Otherwise, please commit things that haven't already been committed and push the remaining commits to the origin.
+Inside the directory, make sure you've committed and pushed everything:
 
 ```bash
 git status
 ```
+
+If it says "your branch is up-to-date", you're fine. Otherwise, please commit things that haven't already been committed and push the remaining commits to the origin.
 
 Once you're sure that the branch is up-to-date, create a new [Git Tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging) and push it:
 
@@ -55,7 +57,7 @@ Now you're good to run this command (which will create a [GitHub Release](https:
 release
 ```
 
-Done! It's that easy. 🎉
+Done! 🎉 It's that easy.
 
 ## Change Types
 
