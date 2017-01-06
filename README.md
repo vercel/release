@@ -14,7 +14,7 @@ Install the package from [npm](https://npmjs.com/release) (you'll need the lates
 npm install -g release
 ```
 
-Run this command inside your project's directory:
+Run this command inside your terminal (in your project's directory):
 
 ```bash
 release
