@@ -11,13 +11,13 @@ When run, this command line interface automatically generates a new [GitHub Rele
 Install the package from [npm](https://npmjs.com/release) (you'll need the latest version of [Node.js](https://nodejs.org) - [why?](https://github.com/zeit/release/blob/5109c726441f002c969c083029511e406f3cd033/bin/release.js#L2)):
 
 ```bash
-$ npm install -g release
+npm install -g release
 ```
 
 Run this command inside your project's directory:
 
 ```bash
-$ release
+release
 ```
 
 ### Options
@@ -25,7 +25,7 @@ $ release
 The following command will show you a list of all available options:
 
 ```bash
-$ release help
+release help
 ```
 
 ## Change Types
