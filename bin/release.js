@@ -144,7 +144,7 @@ const orderCommits = (commits, tags, exists) => {
     const changelog = await createChangelog(grouped, commits, changeTypes)
 
     // Upload changelog to GitHub Releases
-    createRelease(tags[0].version, changelog, exists)
+    createRelease(`v${tags[0].version}`, changelog, exists)
   })
 }
 
