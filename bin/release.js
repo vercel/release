@@ -24,6 +24,7 @@ const pkg = require('../package')
 
 args
   .option('pre', 'Mark the release as prerelease')
+  .option(['t', 'prefix-tag'], 'Prefix tag name with "v"', false)
   .option('overwrite', 'If the release already exists, replace it')
 
 const flags = args.parse(process.argv)
@@ -61,7 +62,7 @@ const getReleaseURL = (release, edit = false) => {
   return edit ? htmlURL.replace('/tag/', '/edit/') : htmlURL
 }
 
-const createRelease = (tag_name, changelog, exists) => {
+const createRelease = (name, changelog, exists) => {
   const isPre = flags.pre ? 'pre' : ''
   handleSpinner.create(`Uploading ${isPre}release`)
 
@@ -71,7 +72,8 @@ const createRelease = (tag_name, changelog, exists) => {
   const body = {
     owner: repoDetails.user,
     repo: repoDetails.repo,
-    tag_name,
+    name,
+    tag_name: flags.prefixTag ? `v${name}` : name,
     body: changelog,
     draft: true,
     prerelease: flags.pre
