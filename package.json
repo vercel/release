@@ -4,7 +4,7 @@
   "description": "Manage GitHub Releases from the command line",
   "scripts": {
     "test": "xo",
-    "preinstall": "bin/preinstall.js"
+    "preinstall": "./bin/preinstall.js"
   },
   "files": [
     "bin",
