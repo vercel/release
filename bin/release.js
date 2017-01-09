@@ -61,7 +61,7 @@ const getReleaseURL = (release, edit = false) => {
   return edit ? htmlURL.replace('/tag/', '/edit/') : htmlURL
 }
 
-const createRelease = (tag_name, changelog, exists) => {
+const createRelease = (tag_name, changelog, exists, latestCommit) => {
   const isPre = flags.pre ? 'pre' : ''
   handleSpinner.create(`Uploading ${isPre}release`)
 
@@ -71,6 +71,7 @@ const createRelease = (tag_name, changelog, exists) => {
   const body = {
     owner: repoDetails.user,
     repo: repoDetails.repo,
+    target_commitish: latestCommit.hash,
     tag_name,
     body: changelog,
     draft: true,
@@ -143,8 +144,10 @@ const orderCommits = (commits, tags, exists) => {
     const grouped = groupChanges(results, changeTypes)
     const changelog = await createChangelog(grouped, commits, changeTypes)
 
+    const latestCommit = commits.reverse()[0]
+
     // Upload changelog to GitHub Releases
-    createRelease(tags[0].version, changelog, exists)
+    createRelease(tags[0].version, changelog, exists, latestCommit)
   })
 }
 
