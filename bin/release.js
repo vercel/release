@@ -71,7 +71,7 @@ const getReleaseURL = (release, edit = false) => {
   return edit ? htmlURL.replace('/tag/', '/edit/') : htmlURL
 }
 
-const createRelease = (tag_name, changelog, exists) => {
+const createRelease = (tag, changelog, exists) => {
   const isPre = flags.pre ? 'pre' : ''
   handleSpinner.create(`Uploading ${isPre}release`)
 
@@ -81,7 +81,7 @@ const createRelease = (tag_name, changelog, exists) => {
   const body = {
     owner: repoDetails.user,
     repo: repoDetails.repo,
-    tag_name,
+    tag_name: tag.tag,
     body: changelog,
     draft: true,
     prerelease: flags.pre
@@ -154,7 +154,7 @@ const orderCommits = (commits, tags, exists) => {
     const changelog = yield createChangelog(grouped, commits, changeTypes)
 
     // Upload changelog to GitHub Releases
-    createRelease(tags[0].version, changelog, exists)
+    createRelease(tags[0], changelog, exists)
   }))
 }
 
@@ -217,7 +217,7 @@ const checkReleaseStatus = coroutine(function * () {
     let existingRelease = null
 
     for (const release of response) {
-      if (release.tag_name === tags[0].version) {
+      if (release.tag_name === tags[0].tag) {
         existingRelease = release
         break
       }
