@@ -220,7 +220,7 @@ const checkReleaseStatus = async () => {
     let existingRelease = null
 
     for (const release of response) {
-      if (release.tag_name === tags[0].version) {
+      if (release.tag_name === tags[0].tag) {
         existingRelease = release
         break
       }
