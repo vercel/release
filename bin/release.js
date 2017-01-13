@@ -161,22 +161,7 @@ const orderCommits = (commits, tags, exists) => {
 const collectChanges = (tags, exists = false) => {
   handleSpinner.create('Loading commit history')
 
-  getCommits().then(commits => {
-    const lastRelease = tags[1]
-
-    if (!lastRelease) {
-      handleSpinner.fail('The first release should be created manually.')
-    }
-
-    for (const commit of commits) {
-      const index = commits.indexOf(commit)
-
-      if (commit.hash === lastRelease.hash && index > 0) {
-        commits = commits.slice(0, index)
-        break
-      }
-    }
-
+  getCommits(tags).then(commits => {
     for (const commit of commits) {
       if (semVer.valid(commit.title)) {
         const index = commits.indexOf(commit)
