@@ -8,7 +8,6 @@ const chalk = require('chalk')
 const semVer = require('semver')
 const inquirer = require('inquirer')
 const open = require('open')
-const taggedVersions = require('tagged-versions')
 const updateNotifier = require('update-notifier')
 
 // Ours
@@ -21,6 +20,8 @@ const connect = require('../lib/connect')
 const createChangelog = require('../lib/changelog')
 const handleSpinner = require('../lib/spinner')
 const pkg = require('../package')
+const {range: getRange} = require('../lib/tag')
+const {read: readPackage} = require('../lib/pkg')
 
 args
   .option('pre', 'Mark the release as prerelease')
@@ -61,7 +62,7 @@ const getReleaseURL = (release, edit = false) => {
   return edit ? htmlURL.replace('/tag/', '/edit/') : htmlURL
 }
 
-const createRelease = (tag_name, changelog, exists, latestCommit) => {
+const createRelease = (releaseTag, changelog, exists) => {
   const isPre = flags.pre ? 'pre' : ''
   handleSpinner.create(`Uploading ${isPre}release`)
 
@@ -71,8 +72,8 @@ const createRelease = (tag_name, changelog, exists, latestCommit) => {
   const body = {
     owner: repoDetails.user,
     repo: repoDetails.repo,
-    target_commitish: latestCommit.hash,
-    tag_name,
+    target_commitish: releaseTag.hash,
+    tag_name: releaseTag.tag,
     body: changelog,
     draft: true,
     prerelease: flags.pre
@@ -144,10 +145,8 @@ const orderCommits = (commits, tags, exists) => {
     const grouped = groupChanges(results, changeTypes)
     const changelog = await createChangelog(grouped, commits, changeTypes)
 
-    const latestCommit = commits.reverse()[0]
-
     // Upload changelog to GitHub Releases
-    createRelease(tags[0].version, changelog, exists, latestCommit)
+    createRelease(tags[0], changelog, exists)
   })
 }
 
@@ -186,16 +185,14 @@ const collectChanges = (tags, exists = false) => {
 }
 
 const checkReleaseStatus = async () => {
-  let tags
+  let range
 
   try {
-    tags = await taggedVersions.getList()
-  } catch (err) {
-    handleSpinner.fail('Directory is not a Git repository.')
-  }
+    const version = await readPackage().then(pkg => pkg.version)
 
-  if (tags.length < 1) {
-    handleSpinner.fail('No tags available for release.')
+    range = await getRange(version)
+  } catch (err) {
+    handleSpinner.fail(err.message)
   }
 
   if (!await branchSynced()) {
@@ -216,27 +213,28 @@ const checkReleaseStatus = async () => {
     }
 
     if (response.length < 1) {
-      collectChanges(tags)
+      collectChanges(range)
       return
     }
 
+    const [releaseTag] = range
     let existingRelease = null
 
     for (const release of response) {
-      if (release.tag_name === tags[0].version) {
+      if (release.tag_name === releaseTag.tag) {
         existingRelease = release
         break
       }
     }
 
     if (!existingRelease) {
-      collectChanges(tags)
+      collectChanges(range)
       return
     }
 
     if (flags.overwrite) {
       global.spinner.text = 'Overwriting release, because it already exists'
-      collectChanges(tags, existingRelease.id)
+      collectChanges(range, existingRelease.id)
 
       return
     }
