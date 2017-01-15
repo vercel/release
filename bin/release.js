@@ -144,7 +144,7 @@ const orderCommits = (commits, tags, exists) => {
     const changelog = await createChangelog(grouped, commits, changeTypes)
 
     // Upload changelog to GitHub Releases
-    createRelease(tags[0].version, changelog, exists)
+    createRelease(tags[0].tag, changelog, exists)
   })
 }
 
@@ -220,7 +220,7 @@ const checkReleaseStatus = async () => {
     let existingRelease = null
 
     for (const release of response) {
-      if (release.tag_name === tags[0].version) {
+      if (release.tag_name === tags[0].tag) {
         existingRelease = release
         break
       }
