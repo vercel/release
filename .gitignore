@@ -3,3 +3,7 @@ node_modules
 
 # logs
 npm-debug.log
+
+# coverage
+.nyc_output/
+coverage/
