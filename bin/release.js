@@ -82,6 +82,7 @@ const createRelease = (tag, changelog, exists) => {
     owner: repoDetails.user,
     repo: repoDetails.repo,
     tag_name: tag.tag,
+    target_commitish: tag.hash,
     body: changelog,
     draft: true,
     prerelease: flags.pre
