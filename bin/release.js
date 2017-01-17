@@ -182,7 +182,7 @@ const checkReleaseStatus = coroutine(function * () {
   let tags
 
   try {
-    tags = yield taggedVersions.getList()
+    tags = yield taggedVersions.getList({rev: 'HEAD'})
   } catch (err) {
     handleSpinner.fail('Directory is not a Git repository.')
   }
