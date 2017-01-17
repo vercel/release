@@ -59,7 +59,7 @@
     "inquirer": "^2.0.0",
     "node-version": "^1.0.0",
     "open": "0.0.5",
-    "ora": "^0.4.1",
+    "ora": "^1.0.0",
     "pluralize": "^3.1.0",
     "random-string": "^0.1.2",
     "request": "^2.79.0",
