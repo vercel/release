@@ -27,4 +27,6 @@ if (!process.env.NOW) {
 }
 
 // Load package core with async/await support
-require('../lib')
+const release = require('../')
+
+release()

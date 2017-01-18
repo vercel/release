@@ -30,6 +30,7 @@
   "bin": {
     "release": "./bin/release.js"
   },
+  "main": "lib/index.js",
   "xo": {
     "esnext": true,
     "space": true,
