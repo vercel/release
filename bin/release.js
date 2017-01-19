@@ -29,4 +29,7 @@ if (!process.env.NOW) {
 // Load package core with async/await support
 const release = require('../')
 
-release()
+release().catch(err => {
+  console.error(`${red('Error!')} ${err.message}`)
+  process.exit(1)
+})
