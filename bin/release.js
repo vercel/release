@@ -30,6 +30,6 @@ if (!process.env.NOW) {
 const release = require('../')
 
 release().catch(err => {
-  console.error(`${red('Error!')} ${err.message}`)
+  console.error(`${red('Error!')} ${err.stack}`)
   process.exit(1)
 })
