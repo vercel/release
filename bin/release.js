@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
 // Packages
+const args = require('args')
 const asyncToGen = require('async-to-gen/register')
+const nodeVersion = require('node-version')
 const updateNotifier = require('update-notifier')
 const {red} = require('chalk')
-const nodeVersion = require('node-version')
 
 // Ours
 const pkg = require('../package')
@@ -29,7 +30,13 @@ if (!process.env.NOW) {
 // Load package core with async/await support
 const release = require('../')
 
-release().catch(err => {
+args
+  .option('pre', 'Mark the release as prerelease')
+  .option('overwrite', 'If the release already exists, replace it')
+
+const flags = args.parse(process.argv)
+
+release(flags).catch(err => {
   console.error(`${red('Error!')} ${err.stack}`)
   process.exit(1)
 })
