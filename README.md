@@ -8,6 +8,8 @@ When run, this command line interface automatically generates a new [GitHub Rele
 
 ## Usage
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/zeit/release.svg)](https://greenkeeper.io/)
+
 Install the package from [npm](https://npmjs.com/release) (you'll need the latest version of [Node](https://nodejs.org) - [why?](https://github.com/zeit/release/blob/5109c726441f002c969c083029511e406f3cd033/bin/release.js#L2)):
 
 ```bash
