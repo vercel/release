@@ -33,6 +33,24 @@ if (!process.env.NOW) {
 const release = require('../')
 const {create: newProgress} = require('../lib/progress')
 
+const changeTypes = [
+  {
+    handle: 'major',
+    name: 'Major Change',
+    description: 'incompatible API change'
+  },
+  {
+    handle: 'minor',
+    name: 'Minor Change',
+    description: 'backwards-compatible functionality'
+  },
+  {
+    handle: 'patch',
+    name: 'Patch',
+    description: 'backwards-compatible bug fix'
+  }
+]
+
 args
   .option('pre', 'Mark the release as prerelease')
   .option('overwrite', 'If the release already exists, replace it')
