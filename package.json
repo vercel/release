@@ -40,7 +40,8 @@
       "import/no-unresolved": 0,
       "import/no-unassigned-import": 0,
       "unicorn/no-process-exit": 0,
-      "camelcase": 0
+      "camelcase": 0,
+      "no-console": 2
     }
   },
   "engines": {
