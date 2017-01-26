@@ -30,7 +30,7 @@ if (!process.env.NOW) {
 }
 
 // Load package core with async/await support
-const release = require('../')
+const defaulPipeline = require('../')
 const {create: newProgress} = require('../lib/progress')
 
 const changeTypes = [
@@ -57,11 +57,13 @@ args
 
 const flags = args.parse(process.argv)
 const progress = newProgress()
-
-release(Object.assign({}, flags, {
+const config = Object.assign({}, flags, {
   changeTypes,
   progress
-})).catch(err => {
+})
+const task = defaulPipeline(config)
+
+task().catch(err => {
   progress.clear()
     .log('')
     .error(err.message)

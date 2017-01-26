@@ -18,56 +18,59 @@ test.afterEach.always(() => {
 })
 
 test.serial('query the latest tag from HEAD', async t => {
-  await tasks.latestTag()
+  const task = tasks.latestTag()
+  const release = {}
+
+  t.is(await task(release), release)
 
   t.true(taggedVersions.getList.calledOnce)
-  t.deepEqual(taggedVersions.getList.lastCall.args, [{rev: 'HEAD', range: undefined}])
+  t.deepEqual(taggedVersions.getList.lastCall.args, [{rev: 'HEAD'}])
 })
 
-test.serial('resolve with the latest tag', async t => {
-  const tag = await tasks.latestTag()
+test.serial('set the latest tag', async t => {
+  const task = tasks.latestTag()
+  const release = {}
 
-  t.is(tag.version, '1.1.3')
+  await task(release)
+
+  t.is(release.target.version, '1.1.3')
 })
 
-test.serial('resolve with the previous tag', async t => {
-  const tag = await tasks.latestTag()
+test.serial('set the previous tag', async t => {
+  const task = tasks.latestTag()
+  const release = {}
 
-  t.is(tag.previous.version, '1.1.2')
-})
+  await task(release)
 
-test.serial('resolve with the release range', async t => {
-  const tag = await tasks.latestTag()
-
-  t.is(tag.range, 'v1.1.2..394b988978a720810f96dd7870c04844103ebb72')
-})
-
-test.serial('resolve with the release type', async t => {
-  const tag = await tasks.latestTag()
-
-  t.is(tag.type, 'patch')
+  t.is(release.previous.version, '1.1.2')
 })
 
 test.serial('reject if the getList does', async t => {
+  const task = tasks.latestTag()
+
   taggedVersions.getList.returns(Promise.reject(new Error()))
 
-  const error = await t.throws(tasks.latestTag())
+  const error = await t.throws(task({}))
 
   t.regex(error.message, /not a git repository/i)
 })
 
 test.serial('reject if there is no tag', async t => {
+  const task = tasks.latestTag()
+
   taggedVersions.getList.returns(Promise.resolve([]))
 
-  const error = await t.throws(tasks.latestTag())
+  const error = await t.throws(task({}))
 
   t.regex(error.message, /no tag available/i)
 })
 
 test.serial('reject if there is no previous tag', async t => {
+  const task = tasks.latestTag()
+
   taggedVersions.getList.returns(Promise.resolve(tags().slice(0, 1)))
 
-  const error = await t.throws(tasks.latestTag())
+  const error = await t.throws(task({}))
 
   t.regex(error.message, /first release should be created manually/i)
 })
