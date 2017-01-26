@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
 // Packages
-const args = require('args')
-const debug = require('debug')('release')
 const asyncToGen = require('async-to-gen/register')
 const nodeVersion = require('node-version')
 const updateNotifier = require('update-notifier')
@@ -30,43 +28,6 @@ if (!process.env.NOW) {
 }
 
 // Load package core with async/await support
-const defaulPipeline = require('../')
-const {create: newProgress} = require('../lib/progress')
+const cli = require('../lib/cli')
 
-const changeTypes = [
-  {
-    handle: 'major',
-    name: 'Major Change',
-    description: 'incompatible API change'
-  },
-  {
-    handle: 'minor',
-    name: 'Minor Change',
-    description: 'backwards-compatible functionality'
-  },
-  {
-    handle: 'patch',
-    name: 'Patch',
-    description: 'backwards-compatible bug fix'
-  }
-]
-
-args
-  .option('pre', 'Mark the release as prerelease')
-  .option('overwrite', 'If the release already exists, replace it')
-
-const flags = args.parse(process.argv)
-const progress = newProgress()
-const config = Object.assign({}, flags, {
-  changeTypes,
-  progress
-})
-const task = defaulPipeline(config)
-
-task().catch(err => {
-  progress.clear()
-    .log('')
-    .error(err.message)
-  debug(err.stack)
-  process.exit(1)
-})
+cli.start()
