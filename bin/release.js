@@ -10,7 +10,10 @@ const nodeVersion = require('node-version')
 const pkg = require('../package')
 
 // Support for keywords "async" and "await"
+const pathSep = process.platform === 'win32' ? '\\\\' : '/'
+
 asyncToGen({
+  includes: new RegExp(`.*release?${pathSep}(lib|bin).*`),
   excludes: null
 })
 
