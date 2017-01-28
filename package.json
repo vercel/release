@@ -1,6 +1,6 @@
 {
   "name": "release",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Manage GitHub Releases from the command line",
   "scripts": {
     "test": "xo"
