@@ -6,7 +6,6 @@ const chalk = require('chalk')
 const semVer = require('semver')
 const inquirer = require('inquirer')
 const open = require('open')
-const taggedVersions = require('tagged-versions')
 const {coroutine} = require('bluebird')
 const updateNotifier = require('update-notifier')
 const {red} = require('chalk')
@@ -17,6 +16,7 @@ const groupChanges = require('../lib/group')
 const {branchSynced, getRepo} = require('../lib/repo')
 const getCommits = require('../lib/commits')
 const getChoices = require('../lib/choices')
+const getTags = require('../lib/tags')
 const definitions = require('../lib/definitions')
 const connect = require('../lib/connect')
 const createChangelog = require('../lib/changelog')
@@ -71,7 +71,7 @@ const getReleaseURL = (release, edit = false) => {
   return edit ? htmlURL.replace('/tag/', '/edit/') : htmlURL
 }
 
-const createRelease = (tag_name, changelog, exists) => {
+const createRelease = (tag, changelog, exists) => {
   const isPre = flags.pre ? 'pre' : ''
   handleSpinner.create(`Uploading ${isPre}release`)
 
@@ -81,7 +81,8 @@ const createRelease = (tag_name, changelog, exists) => {
   const body = {
     owner: repoDetails.user,
     repo: repoDetails.repo,
-    tag_name,
+    tag_name: tag.tag,
+    target_commitish: tag.hash,
     body: changelog,
     draft: true,
     prerelease: flags.pre
@@ -154,7 +155,7 @@ const orderCommits = (commits, tags, exists) => {
     const changelog = yield createChangelog(grouped, commits, changeTypes)
 
     // Upload changelog to GitHub Releases
-    createRelease(tags[0].version, changelog, exists)
+    createRelease(tags[0], changelog, exists)
   }))
 }
 
@@ -181,7 +182,7 @@ const checkReleaseStatus = coroutine(function * () {
   let tags
 
   try {
-    tags = yield taggedVersions.getList()
+    tags = yield getTags()
   } catch (err) {
     handleSpinner.fail('Directory is not a Git repository.')
   }
@@ -217,7 +218,7 @@ const checkReleaseStatus = coroutine(function * () {
     let existingRelease = null
 
     for (const release of response) {
-      if (release.tag_name === tags[0].version) {
+      if (release.tag_name === tags[0].tag) {
         existingRelease = release
         break
       }
