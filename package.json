@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "args": "2.2.3",
-    "async-retry": "0.2.1",
+    "async-retry": "0.3.0",
     "bluebird": "3.4.7",
     "capitalize": "1.0.0",
     "chalk": "1.1.3",
