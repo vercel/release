@@ -6,7 +6,6 @@ const chalk = require('chalk')
 const semVer = require('semver')
 const inquirer = require('inquirer')
 const open = require('open')
-const taggedVersions = require('tagged-versions')
 const {coroutine} = require('bluebird')
 const updateNotifier = require('update-notifier')
 const {red} = require('chalk')
@@ -17,6 +16,7 @@ const groupChanges = require('../lib/group')
 const {branchSynced, getRepo} = require('../lib/repo')
 const getCommits = require('../lib/commits')
 const getChoices = require('../lib/choices')
+const getTags = require('../lib/tags')
 const definitions = require('../lib/definitions')
 const connect = require('../lib/connect')
 const createChangelog = require('../lib/changelog')
@@ -182,7 +182,7 @@ const checkReleaseStatus = coroutine(function * () {
   let tags
 
   try {
-    tags = yield taggedVersions.getList({rev: 'HEAD'})
+    tags = yield getTags()
   } catch (err) {
     handleSpinner.fail('Directory is not a Git repository.')
   }
