@@ -81,8 +81,10 @@ const createRelease = (tag, changelog, exists) => {
   const body = {
     owner: repoDetails.user,
     repo: repoDetails.repo,
+    /* eslint-disable camelcase */
     tag_name: tag.tag,
     target_commitish: tag.hash,
+    /* eslint-enable camelcase */
     body: changelog,
     draft: true,
     prerelease: flags.pre

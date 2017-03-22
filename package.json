@@ -24,13 +24,9 @@
     "release": "./bin/release.js"
   },
   "xo": {
-    "esnext": true,
-    "space": true,
-    "semicolon": false,
-    "rules": {
-      "unicorn/no-process-exit": 0,
-      "camelcase": 0
-    }
+    "extends": [
+      "prettier"
+    ]
   },
   "engines": {
     "node": ">= 6.9.0"
@@ -40,6 +36,7 @@
   },
   "homepage": "https://github.com/zeit/release#readme",
   "devDependencies": {
+    "eslint-config-prettier": "1.5.0",
     "husky": "0.13.1",
     "xo": "0.17.1"
   },
