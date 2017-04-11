@@ -97,13 +97,13 @@ const createRelease = (tag, changelog, exists) => {
   }
 
   githubConnection.repos[method](body, (err, response) => {
-    if (err) {
+    if (err || !response.data) {
       console.log('\n');
       handleSpinner.fail('Failed to upload release.');
     }
 
     global.spinner.succeed();
-    const releaseURL = getReleaseURL(response, true);
+    const releaseURL = getReleaseURL(response.data, true);
 
     if (releaseURL) {
       open(releaseURL);
@@ -217,17 +217,17 @@ const checkReleaseStatus = coroutine(function*() {
     },
     (err, response) => {
       if (err) {
-        handleSpinner.fail(`Couldn't check if release exists.`);
+        handleSpinner.fail("Couldn't check if release exists.");
       }
 
-      if (response.length < 1) {
+      if (!response.data || response.data.length < 1) {
         collectChanges(tags);
         return;
       }
 
       let existingRelease = null;
 
-      for (const release of response) {
+      for (const release of response.data) {
         if (release.tag_name === tags[0].tag) {
           existingRelease = release;
           break;
