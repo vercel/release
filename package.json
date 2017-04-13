@@ -50,7 +50,7 @@
     "xo": "0.18.1"
   },
   "dependencies": {
-    "args": "2.4.2",
+    "args": "2.6.0",
     "async-retry": "0.3.0",
     "bluebird": "3.5.0",
     "capitalize": "1.0.0",
