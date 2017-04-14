@@ -109,7 +109,7 @@ const createRelease = (tag, changelog, exists) => {
       open(releaseURL)
     }
 
-    console.log(`\n${chalk.bold('Done!')} 🎉 Opening release in browser...`)
+    console.log(`\n${chalk.bold('Done!')} Opening release in browser...`)
   })
 }
 
