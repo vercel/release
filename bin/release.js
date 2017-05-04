@@ -221,49 +221,49 @@ const checkReleaseStatus = coroutine(function*() {
     handleSpinner.fail("Couldn't check if release exists.") // (igor) why we hide err?
   }
 
-      if (!response.data || response.data.length < 1) {
-      try {
-        yield collectChanges(tags)
-        return
-      } catch (err) {
-        handleSpinner.fail(err.message)
-      }
-      }
+  if (!response.data || response.data.length < 1) {
+    try {
+      yield collectChanges(tags)
+      return
+    } catch (err) {
+      handleSpinner.fail(err.message)
+    }
+  }
 
-      let existingRelease = null
+  let existingRelease = null
 
-      for (const release of response.data) {
-        if (release.tag_name === tags[0].tag) {
-          existingRelease = release
-          break
-        }
-      }
+  for (const release of response.data) {
+    if (release.tag_name === tags[0].tag) {
+      existingRelease = release
+      break
+    }
+  }
 
-      if (!existingRelease) {
-        collectChanges(tags)
-        return
-      }
+  if (!existingRelease) {
+    collectChanges(tags)
+    return
+  }
 
-      if (flags.overwrite) {
-        global.spinner.text = 'Overwriting release, because it already exists'
-        collectChanges(tags, existingRelease.id)
+  if (flags.overwrite) {
+    global.spinner.text = 'Overwriting release, because it already exists'
+    collectChanges(tags, existingRelease.id)
 
-        return
-      }
+    return
+  }
 
-      global.spinner.succeed()
-      console.log('')
+  global.spinner.succeed()
+  console.log('')
 
-      const releaseURL = getReleaseURL(existingRelease)
+  const releaseURL = getReleaseURL(existingRelease)
 
-      if (releaseURL) {
-        open(releaseURL)
-      }
+  if (releaseURL) {
+    open(releaseURL)
+  }
 
-      const alreadyThere = 'Release already exists. Opening in browser...'
-      console.error(`${chalk.red('Error!')} ` + alreadyThere)
+  const alreadyThere = 'Release already exists. Opening in browser...'
+  console.error(`${chalk.red('Error!')} ` + alreadyThere)
 
-      process.exit(1)
+  process.exit(1)
 })
 
 checkReleaseStatus()
