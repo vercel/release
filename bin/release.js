@@ -170,7 +170,7 @@ const orderCommits = (commits, tags, exists) => {
 const collectChanges = (tags, exists = false) => {
   handleSpinner.create('Loading commit history')
 
-  getCommits(tags).then(commits => {
+  return getCommits(tags).then(commits => {
     for (const commit of commits) {
       if (semVer.valid(commit.title)) {
         const index = commits.indexOf(commit)
