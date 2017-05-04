@@ -210,19 +210,24 @@ const checkReleaseStatus = coroutine(function*() {
 
   handleSpinner.create('Checking if release already exists')
 
-  githubConnection.repos.getReleases(
-    {
+  let response
+
+  try {
+    response = yield githubConnection.repos.getReleases({
       owner: repoDetails.user,
       repo: repoDetails.repo
-    },
-    (err, response) => {
-      if (err) {
-        handleSpinner.fail("Couldn't check if release exists.")
-      }
+    })
+  } catch (err) {
+    handleSpinner.fail("Couldn't check if release exists.") // (igor) why we hide err?
+  }
 
       if (!response.data || response.data.length < 1) {
-        collectChanges(tags)
+      try {
+        yield collectChanges(tags)
         return
+      } catch (err) {
+        handleSpinner.fail(err.message)
+      }
       }
 
       let existingRelease = null
@@ -259,8 +264,6 @@ const checkReleaseStatus = coroutine(function*() {
       console.error(`${chalk.red('Error!')} ` + alreadyThere)
 
       process.exit(1)
-    }
-  )
 })
 
 checkReleaseStatus()
