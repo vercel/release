@@ -65,7 +65,7 @@
     "node-version": "1.0.0",
     "open": "0.0.5",
     "ora": "1.2.0",
-    "pluralize": "4.0.0",
+    "pluralize": "5.0.0",
     "random-string": "0.2.0",
     "request": "2.81.0",
     "request-promise-native": "1.0.4",
