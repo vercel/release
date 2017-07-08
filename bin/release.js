@@ -170,7 +170,7 @@ const orderCommits = (commits, tags, exists) => {
 const collectChanges = (tags, exists = false) => {
   handleSpinner.create('Loading commit history')
 
-  getCommits(tags).then(commits => {
+  return getCommits(tags).then(commits => {
     for (const commit of commits) {
       if (semVer.valid(commit.title)) {
         const index = commits.indexOf(commit)
@@ -210,57 +210,60 @@ const checkReleaseStatus = coroutine(function*() {
 
   handleSpinner.create('Checking if release already exists')
 
-  githubConnection.repos.getReleases(
-    {
+  let response
+
+  try {
+    response = yield githubConnection.repos.getReleases({
       owner: repoDetails.user,
       repo: repoDetails.repo
-    },
-    (err, response) => {
-      if (err) {
-        handleSpinner.fail("Couldn't check if release exists.")
-      }
+    })
+  } catch (err) {
+    handleSpinner.fail("Couldn't check if release exists.") // (igor) why we hide err?
+  }
 
-      if (!response.data || response.data.length < 1) {
-        collectChanges(tags)
-        return
-      }
-
-      let existingRelease = null
-
-      for (const release of response.data) {
-        if (release.tag_name === tags[0].tag) {
-          existingRelease = release
-          break
-        }
-      }
-
-      if (!existingRelease) {
-        collectChanges(tags)
-        return
-      }
-
-      if (flags.overwrite) {
-        global.spinner.text = 'Overwriting release, because it already exists'
-        collectChanges(tags, existingRelease.id)
-
-        return
-      }
-
-      global.spinner.succeed()
-      console.log('')
-
-      const releaseURL = getReleaseURL(existingRelease)
-
-      if (releaseURL) {
-        open(releaseURL)
-      }
-
-      const alreadyThere = 'Release already exists. Opening in browser...'
-      console.error(`${chalk.red('Error!')} ` + alreadyThere)
-
-      process.exit(1)
+  if (!response.data || response.data.length < 1) {
+    try {
+      yield collectChanges(tags)
+      return
+    } catch (err) {
+      handleSpinner.fail(err.message)
     }
-  )
+  }
+
+  let existingRelease = null
+
+  for (const release of response.data) {
+    if (release.tag_name === tags[0].tag) {
+      existingRelease = release
+      break
+    }
+  }
+
+  if (!existingRelease) {
+    collectChanges(tags)
+    return
+  }
+
+  if (flags.overwrite) {
+    global.spinner.text = 'Overwriting release, because it already exists'
+    collectChanges(tags, existingRelease.id)
+
+    return
+  }
+
+  global.spinner.succeed()
+  console.log('')
+
+  const releaseURL = getReleaseURL(existingRelease)
+
+  if (releaseURL) {
+    open(releaseURL)
+  }
+
+  const alreadyThere = 'Release already exists. Opening in browser...'
+  console.error(`${chalk.red('Error!')} ` + alreadyThere)
+
+  process.exit(1)
 })
 
 checkReleaseStatus()
