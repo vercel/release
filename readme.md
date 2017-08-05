@@ -22,6 +22,14 @@ release
 
 You can find an example of how to prepare a release in your project [here](https://github.com/zeit/release/wiki/Example).
 
+### Incrementing Version Tags
+
+To bump the version inside `package.json` or `package-lock.json`, run this command:
+
+```bash
+release <major|minor|patch>
+```
+
 ### Options
 
 The following command will show you a list of all available options:
