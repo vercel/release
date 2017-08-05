@@ -21,6 +21,7 @@ const definitions = require('../lib/definitions')
 const connect = require('../lib/connect')
 const createChangelog = require('../lib/changelog')
 const handleSpinner = require('../lib/spinner')
+const bumpVersion = require('../lib/bump')
 const pkg = require('../package')
 
 // Throw an error if node version is too low
@@ -263,4 +264,23 @@ const checkReleaseStatus = coroutine(function*() {
   )
 })
 
-checkReleaseStatus()
+const bumpType = args.sub
+
+if (bumpType.length === 1) {
+  const allowedTypes = []
+
+  for (const type of changeTypes) {
+    allowedTypes.push(type.handle)
+  }
+
+  const allowed = allowedTypes.includes(bumpType[0])
+
+  if (!allowed) {
+    handleSpinner.fail('Version type not SemVer-compatible.')
+    process.exit(1)
+  }
+
+  bumpVersion(bumpType[0])
+} else {
+  checkReleaseStatus()
+}
