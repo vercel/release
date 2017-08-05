@@ -24,7 +24,7 @@ You can find an example of how to prepare a release in your project [here](https
 
 ### Incrementing Version Tags
 
-To bump the version inside `package.json` or `package-lock.json`, run this command:
+To bump the version inside `package.json` or `package-lock.json`, run this command (`npm version` is similar to this but will prefix version tags with "v"):
 
 ```bash
 release <major|minor|patch>
