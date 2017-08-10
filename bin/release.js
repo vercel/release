@@ -10,6 +10,7 @@ const { coroutine } = require('bluebird')
 const updateNotifier = require('update-notifier')
 const { red } = require('chalk')
 const nodeVersion = require('node-version')
+const sleep = require('then-sleep')
 
 // Ours
 const groupChanges = require('../lib/group')
@@ -97,21 +98,27 @@ const createRelease = (tag, changelog, exists) => {
     body.id = exists
   }
 
-  githubConnection.repos[method](body, (err, response) => {
-    if (err || !response.data) {
-      console.log('\n')
-      handleSpinner.fail('Failed to upload release.')
-    }
+  githubConnection.repos[method](
+    body,
+    coroutine(function*(err, response) {
+      if (err || !response.data) {
+        console.log('\n')
+        handleSpinner.fail('Failed to upload release.')
+      }
 
-    global.spinner.succeed()
-    const releaseURL = getReleaseURL(response.data, true)
+      global.spinner.succeed()
+      const releaseURL = getReleaseURL(response.data, true)
 
-    if (releaseURL) {
-      open(releaseURL)
-    }
+      // Wait for the GitHub UI to render the release
+      yield sleep(500)
 
-    console.log(`\n${chalk.bold('Done!')} Opening release in browser...`)
-  })
+      if (releaseURL) {
+        open(releaseURL)
+      }
+
+      console.log(`\n${chalk.bold('Done!')} Opening release in browser...`)
+    })
+  )
 }
 
 const orderCommits = (commits, tags, exists) => {
