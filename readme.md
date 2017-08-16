@@ -8,7 +8,7 @@ When run, this command line interface automatically generates a new [GitHub Rele
 
 ## Usage
 
-Install the package from [npm](https://npmjs.com/release) (you'll need at least Node.js 6.9.0):
+Install the package from [npm](https://npmjs.com/release) (you'll need at least Node.js 8.0.0):
 
 ```bash
 npm install -g release
