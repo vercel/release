@@ -287,7 +287,9 @@ if (bumpType.length === 1) {
   const allowed = allowedTypes.includes(bumpType[0])
 
   if (!allowed) {
-    handleSpinner.fail('Version type not SemVer-compatible.')
+    handleSpinner.fail(
+      'Version type not SemVer-compatible (major, minor or patch)!'
+    )
     process.exit(1)
   }
 
