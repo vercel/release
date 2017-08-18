@@ -6,13 +6,12 @@ const chalk = require('chalk')
 const semVer = require('semver')
 const inquirer = require('inquirer')
 const open = require('open')
-const { coroutine } = require('bluebird')
 const updateNotifier = require('update-notifier')
 const { red } = require('chalk')
 const nodeVersion = require('node-version')
 const sleep = require('then-sleep')
 
-// Ours
+// Utilities
 const groupChanges = require('../lib/group')
 const { branchSynced, getRepo } = require('../lib/repo')
 const getCommits = require('../lib/commits')
@@ -75,7 +74,7 @@ const getReleaseURL = (release, edit = false) => {
   return edit ? htmlURL.replace('/tag/', '/edit/') : htmlURL
 }
 
-const createRelease = (tag, changelog, exists) => {
+const createRelease = async (tag, changelog, exists) => {
   const isPre = flags.pre ? 'pre' : ''
   handleSpinner.create(`Uploading ${isPre}release`)
 
@@ -98,30 +97,33 @@ const createRelease = (tag, changelog, exists) => {
     body.id = exists
   }
 
-  githubConnection.repos[method](
-    body,
-    coroutine(function*(err, response) {
-      if (err || !response.data) {
-        console.log('\n')
-        handleSpinner.fail('Failed to upload release.')
-      }
+  let response
 
-      global.spinner.succeed()
-      const releaseURL = getReleaseURL(response.data, true)
+  try {
+    response = await githubConnection.repos[method](body)
+  } catch (err) {
+    response = {}
+  }
 
-      // Wait for the GitHub UI to render the release
-      yield sleep(500)
+  if (!response.data) {
+    console.log('\n')
+    handleSpinner.fail('Failed to upload release.')
+  }
 
-      if (releaseURL) {
-        open(releaseURL)
-      }
+  global.spinner.succeed()
+  const releaseURL = getReleaseURL(response.data, true)
 
-      console.log(`\n${chalk.bold('Done!')} Opening release in browser...`)
-    })
-  )
+  // Wait for the GitHub UI to render the release
+  await sleep(500)
+
+  if (releaseURL) {
+    open(releaseURL)
+  }
+
+  console.log(`\n${chalk.bold('Done!')} Opening release in browser...`)
 }
 
-const orderCommits = (commits, tags, exists) => {
+const orderCommits = async (commits, tags, exists) => {
   const questions = []
   const predefined = {}
 
@@ -159,50 +161,50 @@ const orderCommits = (commits, tags, exists) => {
     `${chalk.green('!')} Please enter the type of change for each commit:\n`
   )
 
-  inquirer.prompt(questions).then(
-    coroutine(function*(types) {
-      // Update the spinner status
-      console.log('')
-      handleSpinner.create('Generating the changelog')
+  const types = await inquirer.prompt(questions)
 
-      const results = Object.assign({}, predefined, types)
-      const grouped = groupChanges(results, changeTypes)
-      const changelog = yield createChangelog(grouped, commits, changeTypes)
+  // Update the spinner status
+  console.log('')
+  handleSpinner.create('Generating the changelog')
 
-      // Upload changelog to GitHub Releases
-      createRelease(tags[0], changelog, exists)
-    })
-  )
+  const results = Object.assign({}, predefined, types)
+  const grouped = groupChanges(results, changeTypes)
+  const changelog = await createChangelog(grouped, commits, changeTypes)
+
+  // Upload changelog to GitHub Releases
+  createRelease(tags[0], changelog, exists)
 }
 
-const collectChanges = (tags, exists = false) => {
+const collectChanges = async (tags, exists = false) => {
   handleSpinner.create('Loading commit history')
 
-  getCommits(tags)
-    .then(commits => {
-      for (const commit of commits) {
-        if (semVer.valid(commit.title)) {
-          const index = commits.indexOf(commit)
-          commits.splice(index, 1)
-        }
-      }
+  let commits
 
-      if (commits.length < 1) {
-        handleSpinner.fail('No changes happened since the last release.')
-      }
+  try {
+    commits = await getCommits(tags)
+  } catch (err) {
+    handleSpinner.fail(err.message)
+  }
 
-      orderCommits(commits, tags, exists)
-    })
-    .catch(err => {
-      handleSpinner.fail(err.message)
-    })
+  for (const commit of commits) {
+    if (semVer.valid(commit.title)) {
+      const index = commits.indexOf(commit)
+      commits.splice(index, 1)
+    }
+  }
+
+  if (commits.length < 1) {
+    handleSpinner.fail('No changes happened since the last release.')
+  }
+
+  orderCommits(commits, tags, exists)
 }
 
-const checkReleaseStatus = coroutine(function*() {
+const checkReleaseStatus = async () => {
   let tags
 
   try {
-    tags = yield getTags()
+    tags = await getTags()
   } catch (err) {
     handleSpinner.fail('Directory is not a Git repository.')
   }
@@ -211,69 +213,70 @@ const checkReleaseStatus = coroutine(function*() {
     handleSpinner.fail('No tags available for release.')
   }
 
-  const synced = yield branchSynced()
+  const synced = await branchSynced()
 
   if (!synced) {
     handleSpinner.fail('Your branch needs to be up-to-date with origin.')
   }
 
-  githubConnection = yield connect()
-  repoDetails = yield getRepo(githubConnection)
+  githubConnection = await connect()
+  repoDetails = await getRepo(githubConnection)
 
   handleSpinner.create('Checking if release already exists')
 
-  githubConnection.repos.getReleases(
-    {
+  let response
+
+  try {
+    response = await githubConnection.repos.getReleases({
       owner: repoDetails.user,
       repo: repoDetails.repo
-    },
-    (err, response) => {
-      if (err) {
-        handleSpinner.fail("Couldn't check if release exists.")
-      }
+    })
+  } catch (err) {}
 
-      if (!response.data || response.data.length < 1) {
-        collectChanges(tags)
-        return
-      }
+  if (!response) {
+    handleSpinner.fail("Couldn't check if release exists.")
+  }
 
-      let existingRelease = null
+  if (!response.data || response.data.length < 1) {
+    collectChanges(tags)
+    return
+  }
 
-      for (const release of response.data) {
-        if (release.tag_name === tags[0].tag) {
-          existingRelease = release
-          break
-        }
-      }
+  let existingRelease = null
 
-      if (!existingRelease) {
-        collectChanges(tags)
-        return
-      }
-
-      if (flags.overwrite) {
-        global.spinner.text = 'Overwriting release, because it already exists'
-        collectChanges(tags, existingRelease.id)
-
-        return
-      }
-
-      global.spinner.succeed()
-      console.log('')
-
-      const releaseURL = getReleaseURL(existingRelease)
-
-      if (releaseURL) {
-        open(releaseURL)
-      }
-
-      const alreadyThere = 'Release already exists. Opening in browser...'
-      console.error(`${chalk.red('Error!')} ` + alreadyThere)
-
-      process.exit(1)
+  for (const release of response.data) {
+    if (release.tag_name === tags[0].tag) {
+      existingRelease = release
+      break
     }
-  )
-})
+  }
+
+  if (!existingRelease) {
+    collectChanges(tags)
+    return
+  }
+
+  if (flags.overwrite) {
+    global.spinner.text = 'Overwriting release, because it already exists'
+    collectChanges(tags, existingRelease.id)
+
+    return
+  }
+
+  global.spinner.succeed()
+  console.log('')
+
+  const releaseURL = getReleaseURL(existingRelease)
+
+  if (releaseURL) {
+    open(releaseURL)
+  }
+
+  const alreadyThere = 'Release already exists. Opening in browser...'
+  console.error(`${chalk.red('Error!')} ` + alreadyThere)
+
+  process.exit(1)
+}
 
 const bumpType = args.sub
 
