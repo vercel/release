@@ -218,7 +218,7 @@ const checkReleaseStatus = coroutine(function*() {
   }
 
   githubConnection = yield connect()
-  repoDetails = yield getRepo()
+  repoDetails = yield getRepo(githubConnection)
 
   handleSpinner.create('Checking if release already exists')
 
