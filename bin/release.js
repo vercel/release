@@ -41,6 +41,7 @@ if (pkg.dist) {
 args
   .option('pre', 'Mark the release as prerelease')
   .option('overwrite', 'If the release already exists, replace it')
+  .option('publish', 'Instead of creating a draft, publish the release')
 
 const flags = args.parse(process.argv)
 
@@ -89,7 +90,7 @@ const createRelease = async (tag, changelog, exists) => {
     target_commitish: tag.hash,
     /* eslint-enable camelcase */
     body: changelog,
-    draft: true,
+    draft: !flags.publish,
     prerelease: flags.pre
   }
 
