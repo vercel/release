@@ -131,9 +131,9 @@ const orderCommits = async (commits, tags, exists) => {
   const choices = getChoices(changeTypes, tags)
 
   // Show the latest changes first
-  commits.reverse()
+  commits.all.reverse()
 
-  for (const commit of commits) {
+  for (const commit of commits.all) {
     const defTitle = definitions.type(commit.title, changeTypes)
     const defDescription = definitions.type(commit.description, changeTypes)
 
@@ -187,10 +187,10 @@ const collectChanges = async (tags, exists = false) => {
     handleSpinner.fail(err.message)
   }
 
-  for (const commit of commits) {
+  for (const commit of commits.all) {
     if (semVer.valid(commit.title)) {
-      const index = commits.indexOf(commit)
-      commits.splice(index, 1)
+      const index = commits.all.indexOf(commit)
+      commits.all.splice(index, 1)
     }
   }
 
