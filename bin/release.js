@@ -81,6 +81,7 @@ const createRelease = async (tag, changelog, exists) => {
 
   const methodPrefix = exists ? 'edit' : 'create'
   const method = methodPrefix + 'Release'
+  const { pre, publish } = flags
 
   const body = {
     owner: repoDetails.user,
@@ -90,8 +91,8 @@ const createRelease = async (tag, changelog, exists) => {
     target_commitish: tag.hash,
     /* eslint-enable camelcase */
     body: changelog,
-    draft: !flags.publish,
-    prerelease: flags.pre
+    draft: !publish,
+    prerelease: pre
   }
 
   if (exists) {
@@ -112,7 +113,7 @@ const createRelease = async (tag, changelog, exists) => {
   }
 
   global.spinner.succeed()
-  const releaseURL = getReleaseURL(response.data, true)
+  const releaseURL = getReleaseURL(response.data, !publish)
 
   // Wait for the GitHub UI to render the release
   await sleep(500)
