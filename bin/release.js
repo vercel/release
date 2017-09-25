@@ -42,6 +42,7 @@ args
   .option('pre', 'Mark the release as prerelease')
   .option('overwrite', 'If the release already exists, replace it')
   .option('publish', 'Instead of creating a draft, publish the release')
+  .option(['H', 'hook'], 'Specify a custom file to pipe releases through')
 
 const flags = args.parse(process.argv)
 
