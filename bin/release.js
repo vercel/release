@@ -183,8 +183,8 @@ const orderCommits = async (commits, tags, exists) => {
   // was specified using the `--hook` flag
   const filtered = await applyHook(flags.hook, changelog, {
     changeTypes,
-    groupedCommits: grouped,
     commits,
+    groupedCommits: grouped,
     authors: credits
   })
 
