@@ -172,13 +172,20 @@ const orderCommits = async (commits, tags, exists) => {
   handleSpinner.create('Generating the changelog')
 
   const results = Object.assign({}, predefined, types)
-  const groupedCommits = groupChanges(results, changeTypes)
-  const changelog = await createChangelog(groupedCommits, commits, changeTypes)
+  const grouped = groupChanges(results, changeTypes)
+  const { changelog, credits } = await createChangelog(
+    grouped,
+    commits,
+    changeTypes
+  )
 
+  // Apply the `release.js` file or the one that
+  // was specified using the `--hook` flag
   const filtered = await applyHook(flags.hook, changelog, {
     changeTypes,
-    groupedCommits,
-    commits
+    groupedCommits: grouped,
+    commits,
+    authors: credits
   })
 
   // Upload changelog to GitHub Releases
