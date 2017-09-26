@@ -173,11 +173,9 @@ const orderCommits = async (commits, tags, exists) => {
 
   const results = Object.assign({}, predefined, types)
   const grouped = groupChanges(results, changeTypes)
-  const { changelog, credits } = await createChangelog(
-    grouped,
-    commits,
-    changeTypes
-  )
+  const changes = await createChangelog(grouped, commits, changeTypes)
+
+  const { credits, changelog } = changes
 
   // Apply the `release.js` file or the one that
   // was specified using the `--hook` flag
