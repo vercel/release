@@ -23,6 +23,7 @@ const createChangelog = require('../lib/changelog')
 const handleSpinner = require('../lib/spinner')
 const bumpVersion = require('../lib/bump')
 const pkg = require('../package')
+const applyHook = require('../lib/hook')
 
 // Throw an error if node version is too low
 if (nodeVersion.major < 6) {
@@ -171,11 +172,17 @@ const orderCommits = async (commits, tags, exists) => {
   handleSpinner.create('Generating the changelog')
 
   const results = Object.assign({}, predefined, types)
-  const grouped = groupChanges(results, changeTypes)
-  const changelog = await createChangelog(grouped, commits, changeTypes)
+  const groupedCommits = groupChanges(results, changeTypes)
+  const changelog = await createChangelog(groupedCommits, commits, changeTypes)
+
+  const filtered = await applyHook(flags.hook, changelog, {
+    changeTypes,
+    groupedCommits,
+    commits
+  })
 
   // Upload changelog to GitHub Releases
-  createRelease(tags[0], changelog, exists)
+  createRelease(tags[0], filtered, exists)
 }
 
 const collectChanges = async (tags, exists = false) => {
