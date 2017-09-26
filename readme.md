@@ -42,6 +42,32 @@ release help
 
 Each commit can be assigned a certain type of change. [Here](https://github.com/zeit/release/wiki/Change-Types)'s the full list.
 
+## Custom Hook
+
+Sometimes you might want to filter the information that gets inserted into new releases by adding an intro text, replacing certain data or just changing the order of the changes.
+
+With a custom hook, the examples above (and many more) are very easy to accomplish:
+
+By default, release will look for a file named `release.js` in the root directory of your project. This file should export a function with two parameters and always return a `String` (the final release):
+
+```js
+module.exports = (markdown, metaData) => {
+  // Use the available data to create a custom release
+  return markdown
+}
+```
+
+In the example above, `markdown` contains the release as a `String` (if you just want to replace something). In addition, `metaData` contains these properties:
+
+| Property Name    | Content                                               |
+|------------------|-------------------------------------------------------|
+| `changeTypes`    | The types of changes and their descriptions           |
+| `commits`        | A list of commits since the latest release            |
+| `groupedCommits` | Similar to `commits`, but grouped by the change types |
+| `authors`        | The GitHub usernames of the release collaborators     |
+
+**Hint:** You can specify a custom location for the hook file using the `--hook` or `-H` flag, which takes in a path relative to the current working directory.
+
 ## Why?
 
 As we at [ZEIT](https://github.com/zeit) moved all of our GitHub repositories from keeping a `HISTORY.md` file to using [GitHub Releases](https://help.github.com/articles/creating-releases/), we needed a way to automatically generate these releases from our own devices, rather than always having to open a page in the browser and manually add the notes for each change.
