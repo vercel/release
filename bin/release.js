@@ -23,6 +23,7 @@ const createChangelog = require('../lib/changelog')
 const handleSpinner = require('../lib/spinner')
 const bumpVersion = require('../lib/bump')
 const pkg = require('../package')
+const applyHook = require('../lib/hook')
 
 // Throw an error if node version is too low
 if (nodeVersion.major < 6) {
@@ -42,6 +43,7 @@ args
   .option('pre', 'Mark the release as prerelease')
   .option('overwrite', 'If the release already exists, replace it')
   .option('publish', 'Instead of creating a draft, publish the release')
+  .option(['H', 'hook'], 'Specify a custom file to pipe releases through')
 
 const flags = args.parse(process.argv)
 
@@ -171,10 +173,21 @@ const orderCommits = async (commits, tags, exists) => {
 
   const results = Object.assign({}, predefined, types)
   const grouped = groupChanges(results, changeTypes)
-  const changelog = await createChangelog(grouped, commits, changeTypes)
+  const changes = await createChangelog(grouped, commits, changeTypes)
+
+  const { credits, changelog } = changes
+
+  // Apply the `release.js` file or the one that
+  // was specified using the `--hook` flag
+  const filtered = await applyHook(flags.hook, changelog, {
+    changeTypes,
+    commits,
+    groupedCommits: grouped,
+    authors: credits
+  })
 
   // Upload changelog to GitHub Releases
-  createRelease(tags[0], changelog, exists)
+  createRelease(tags[0], filtered, exists)
 }
 
 const collectChanges = async (tags, exists = false) => {
