@@ -20,7 +20,7 @@ Run this command inside your terminal (in your project's directory):
 release
 ```
 
-You can find an example of how to prepare a release in your project [here](https://github.com/zeit/release/wiki/Example).
+You can find an example of how to prepare a release in your project [here](#example).
 
 ### Incrementing Version Tags
 
@@ -38,9 +38,58 @@ The following command will show you a list of all available options:
 release help
 ```
 
+## Example
+
+After [installing](https://github.com/zeit/release) the package, move into the directory of your project:
+
+```bash
+cd <your-projects-path>
+```
+
+Inside the directory, make sure you've committed and pushed everything:
+
+```bash
+git status
+```
+
+If it says "your branch is up-to-date", you're fine. Otherwise, please commit things that haven't already been committed and push the remaining commits to the origin.
+
+Once you're sure that the branch is up-to-date, create a new [Git Tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging) and push it:
+
+```bash
+git tag <version-number>
+git push --tags
+```
+
+Now you're good to run this command (which will create a [GitHub Release](https://help.github.com/articles/creating-releases/) for you):
+
+```bash
+release
+```
+
+Done! 🎉 It's that easy.
+
 ## Change Types
 
-Each commit can be assigned a certain type of change. [Here](https://github.com/zeit/release/wiki/Change-Types)'s the full list.
+As described in the [Semantic Versioning guide](http://semver.org/#summary), a commit falls into one of these categories:
+
+- **Major Changes** (incompatible API changes)
+- **Minor Changes** (functionality in a backwards-compatible manner)
+- **Patches** (backwards-compatible bug fixes)
+
+When running the `release` command, you'll be asked to provide the types for all of the commits you've created since the last release. This allows the package to automatically generate a proper changelog for you.
+
+### Pre-Defining the Type of a Commit
+
+If you want to automate this even further, specify the change type of your commits by adding it to the **title** or **description** within parenthesis:
+
+> Error logging works now (patch)
+
+Assuming that you've defined it for a certain commit, the package won't ask you to set a type for it manually. This will make the process of creating a release much faster.
+
+To pre-define that a commit should be excluded from the list, you can use this keyword:
+
+> This is a commit message (ignore)
 
 ## Custom Hook
 
