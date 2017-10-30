@@ -142,14 +142,60 @@ const orderCommits = async (commits, tags, exists) => {
 
     const definition = defTitle || defDescription
 
+    // Firstly try to use the commit title
+    let message = commit.title
+
+    // If it wasn't set, try the description
+    if (message.length === 0) {
+      let description = ''
+      let index = 0
+
+      // Find a useful line of the description field
+      do {
+        const lines = commit.description.split('\n')
+
+        try {
+          description = lines[index]
+        } catch (err) {
+          description = lines[0]
+          break
+        }
+
+        // Replace the listing sign GitHub is adding
+        description = description.replace('* ', '')
+
+        // Try a different line
+        index++
+      } while (
+        !description.length ||
+        questions.find(question => {
+          return question.message === description
+        })
+      )
+
+      message = description
+    }
+
+    // If for some reason the message is still not defined,
+    // don't include it in the list
+    if (message.length === 0) {
+      continue
+    }
+
+    // If a type preset was found, don't include it
+    // in the list either
     if (definition) {
-      predefined[commit.hash] = definition
+      predefined[commit.hash] = {
+        type: definition,
+        message
+      }
+
       continue
     }
 
     questions.push({
       name: commit.hash,
-      message: commit.title,
+      message,
       type: 'list',
       choices
     })
@@ -165,13 +211,27 @@ const orderCommits = async (commits, tags, exists) => {
     `${chalk.green('!')} Please enter the type of change for each commit:\n`
   )
 
-  const types = await inquirer.prompt(questions)
+  const answers = await inquirer.prompt(questions)
+
+  for (const answer in answers) {
+    if (!{}.hasOwnProperty.call(answers, answer)) {
+      continue
+    }
+
+    const type = answers[answer]
+    const { message } = questions.find(question => question.name === answer)
+
+    answers[answer] = {
+      type,
+      message
+    }
+  }
 
   // Update the spinner status
   console.log('')
   handleSpinner.create('Generating the changelog')
 
-  const results = Object.assign({}, predefined, types)
+  const results = Object.assign({}, predefined, answers)
   const grouped = groupChanges(results, changeTypes)
   const changes = await createChangelog(grouped, commits, changeTypes)
 
