@@ -147,33 +147,30 @@ const orderCommits = async (commits, tags, exists) => {
 
     // If it wasn't set, try the description
     if (message.length === 0) {
-      let description = ''
-      let index = 0
+      const lines = commit.description.split('\n')
 
-      // Find a useful line of the description field
-      do {
-        const lines = commit.description.split('\n')
-
-        try {
-          description = lines[index]
-        } catch (err) {
-          description = lines[0]
-          break
+      for (let line of lines) {
+        if (!line) {
+          continue
         }
 
-        // Replace the listing sign GitHub is adding
-        description = description.replace('* ', '')
+        line = line.replace('* ', '')
 
-        // Try a different line
-        index++
-      } while (
-        !description.length ||
-        questions.find(question => {
-          return question.message === description
-        })
-      )
+        if (line.length === 0) {
+          continue
+        }
 
-      message = description
+        const exists = questions.find(question => question.message === line)
+
+        if (exists) {
+          continue
+        }
+
+        if (line.length > 1) {
+          message = line
+          break
+        }
+      }
     }
 
     // If for some reason the message is still not defined,
