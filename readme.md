@@ -8,37 +8,37 @@ When run, this command line interface automatically generates a new [GitHub Rele
 
 ## Usage
 
-Install the package from [npm](https://npmjs.com/release) (you'll need at least Node.js 7.6.0):
+Firstly, install the package from [npm](https://npmjs.com/release) (you'll need at least Node.js 7.6.0):
 
 ```bash
 npm install -g release
 ```
 
-Run this command inside your terminal (in your project's directory):
+### Stable Releases
+
+Once that's done, you can run this command inside your project's directory:
 
 ```bash
-release
+release <type>
 ```
 
-You can find an example of how to prepare a release in your project [here](#example).
+As you can see, a `<type>` argument can be passed. According to the [SemVer](https://semver.org) spec, it can have one of these values:
 
-### Incrementing Version Tags
+- `major`: Incompatible API changes were introduced
+- `minor`: Functionality was added in a backwards-compatible manner
+- `patch`: Backwards-compatible bug fixes were applied
 
-To bump the version inside `package.json` or `package-lock.json`, run this command (`npm version` is similar to this but will prefix version tags with "v"):
+### Pre-Releases
 
-```bash
-release <major|minor|patch>
-```
-
-#### Pre-Releases
-
-Assuming that you want to increment a pre-release tag like `3.0.0-canary.1`, you can do it like this:
+In addition to those values, we also support a custom one for creating pre-releases:
 
 ```bash
 release pre
 ```
 
-For the example tag mentioned above, the command will result in `3.0.0-canary.2`. However, you can also increment a normal tag like `3.0.0` to a pre-release one like this:
+Assuming that the current version tag in your metafiles is `3.0.0-canary.1` (as an example), it will then be incremented to `3.0.0-canary.2`.
+
+However, you can also increment a normal tag like `3.0.0` to a pre-release one like this:
 
 ```bash
 release pre <suffix>
