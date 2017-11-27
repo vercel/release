@@ -20,7 +20,9 @@ Once that's done, you can run this command inside your project's directory:
 release <type>
 ```
 
-As you can see, a `<type>` argument can be passed. According to the [SemVer](https://semver.org) spec, it can have one of these values:
+As you can see, a `<type>` argument can be passed. If you leave it out, a [GitHub Release](https://help.github.com/articles/creating-releases/) will be created from the latest commit and tag.
+
+According to the [SemVer](https://semver.org) spec, it can have one of these values:
 
 - `major`: Incompatible API changes were introduced
 - `minor`: Functionality was added in a backwards-compatible manner
