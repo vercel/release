@@ -351,24 +351,26 @@ const checkReleaseStatus = async () => {
 }
 
 const bumpType = args.sub
+const argAmount = bumpType.length
 
-if (bumpType.length === 1) {
-  const allowedTypes = []
+if (argAmount === 1 || (bumpType[0] === 'pre' && argAmount === 2)) {
+  const allowedTypes = ['pre']
 
   for (const type of changeTypes) {
     allowedTypes.push(type.handle)
   }
 
   const allowed = allowedTypes.includes(bumpType[0])
+  const type = bumpType[0]
 
   if (!allowed) {
     handleSpinner.fail(
-      'Version type not SemVer-compatible (major, minor or patch)!'
+      'Version type not SemVer-compatible ("major", "minor", "patch" or "pre")'
     )
     process.exit(1)
   }
 
-  bumpVersion(bumpType[0])
+  bumpVersion(type, bumpType[1])
 } else {
   checkReleaseStatus()
 }

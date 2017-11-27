@@ -30,6 +30,23 @@ To bump the version inside `package.json` or `package-lock.json`, run this comma
 release <major|minor|patch>
 ```
 
+### Pre-Releases
+
+Assuming that you want to increment a pre-release tag like `3.0.0-canary.1`, you can do it like this:
+
+```bash
+release pre
+```
+
+For the example tag mentioned above, the command will result in `3.0.0-canary.2`. However, you can also increment a normal tag like `3.0.0` to a pre-release one like this:
+
+```bash
+release pre <suffix>
+```
+
+If `<suffix>` is "canary", the example tag `3.0.0` would be incremented to `3.0.0-canary.0`. You can use any
+word of your choice in place of `<suffix>`.
+
 ### Options
 
 The following command will show you a list of all available options:
