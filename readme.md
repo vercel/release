@@ -14,8 +14,6 @@ Firstly, install the package from [npm](https://npmjs.com/release) (you'll need 
 npm install -g release
 ```
 
-### Stable Releases
-
 Once that's done, you can run this command inside your project's directory:
 
 ```bash
@@ -28,24 +26,19 @@ As you can see, a `<type>` argument can be passed. According to the [SemVer](htt
 - `minor`: Functionality was added in a backwards-compatible manner
 - `patch`: Backwards-compatible bug fixes were applied
 
-### Pre-Releases
-
-In addition to those values, we also support a custom one for creating pre-releases:
+In addition to those values, we also support a custom one for creating pre-releases like `3.0.0-canary.1`:
 
 ```bash
 release pre
 ```
 
-Assuming that the current version tag in your metafiles is `3.0.0-canary.1` (as an example), it will then be incremented to `3.0.0-canary.2`.
-
-However, you can also increment a normal tag like `3.0.0` to a pre-release one like this:
+You can also apply a custom suffix in place of `canary` like this:
 
 ```bash
 release pre <suffix>
 ```
 
-If `<suffix>` is "canary", the example tag `3.0.0` would be incremented to `3.0.0-canary.0`. You can use any
-word of your choice in place of `<suffix>`, but we generally recommend "canary" or "beta".
+Assuming that you provide "beta" as the `<suffix>` your release will then be `3.0.0-beta.1`.
 
 ### Options
 
@@ -54,37 +47,6 @@ The following command will show you a list of all available options:
 ```bash
 release help
 ```
-
-## Example
-
-After [installing](https://github.com/zeit/release) the package, move into the directory of your project:
-
-```bash
-cd <your-projects-path>
-```
-
-Inside the directory, make sure you've committed and pushed everything:
-
-```bash
-git status
-```
-
-If it says "your branch is up-to-date", you're fine. Otherwise, please commit things that haven't already been committed and push the remaining commits to the origin.
-
-Once you're sure that the branch is up-to-date, create a new [Git Tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging) and push it:
-
-```bash
-git tag <version-number>
-git push --tags
-```
-
-Now you're good to run this command (which will create a [GitHub Release](https://help.github.com/articles/creating-releases/) for you):
-
-```bash
-release
-```
-
-Done! 🎉 It's that easy.
 
 ## Change Types
 
