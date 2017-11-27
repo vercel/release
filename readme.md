@@ -30,7 +30,7 @@ To bump the version inside `package.json` or `package-lock.json`, run this comma
 release <major|minor|patch>
 ```
 
-### Pre-Releases
+#### Pre-Releases
 
 Assuming that you want to increment a pre-release tag like `3.0.0-canary.1`, you can do it like this:
 
