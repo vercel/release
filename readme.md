@@ -20,7 +20,7 @@ Once that's done, you can run this command inside your project's directory:
 release <type>
 ```
 
-As you can see, a `<type>` argument can be passed. If you leave it out, a [GitHub Release](https://help.github.com/articles/creating-releases/) will be created from the latest commit and tag.
+As you can see, a `<type>` argument can be passed. If you leave it out, a [GitHub Release](https://help.github.com/articles/creating-releases/) will be created from the most recent commit and tag.
 
 According to the [SemVer](https://semver.org) spec, it can have one of these values:
 
@@ -40,7 +40,7 @@ You can also apply a custom suffix in place of `canary` like this:
 release pre <suffix>
 ```
 
-Assuming that you provide "beta" as the `<suffix>` your release will then be `3.0.0-beta.1`.
+Assuming that you provide "beta" as the `<suffix>` your release will then be `3.0.0-beta.1` – and so on...
 
 ### Options
 
