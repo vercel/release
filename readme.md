@@ -42,7 +42,7 @@ release pre <suffix>
 
 Assuming that you provide "beta" as the `<suffix>` your release will then be `3.0.0-beta.1` – and so on...
 
-### Options
+## Options
 
 The following command will show you a list of all available options:
 
@@ -50,23 +50,13 @@ The following command will show you a list of all available options:
 release help
 ```
 
-## Change Types
+## Pre-Defining Types
 
-As described in the [Semantic Versioning guide](http://semver.org/#summary), a commit falls into one of these categories:
-
-- **Major Changes** (incompatible API changes)
-- **Minor Changes** (functionality in a backwards-compatible manner)
-- **Patches** (backwards-compatible bug fixes)
-
-When running the `release` command, you'll be asked to provide the types for all of the commits you've created since the last release. This allows the package to automatically generate a proper changelog for you.
-
-### Pre-Defining the Type of a Commit
-
-If you want to automate this even further, specify the change type of your commits by adding it to the **title** or **description** within parenthesis:
+If you want to automate `release` even further, specify the change type of your commits by adding it to the **title** or **description** within parenthesis:
 
 > Error logging works now (patch)
 
-Assuming that you've defined it for a certain commit, the package won't ask you to set a type for it manually. This will make the process of creating a release much faster.
+Assuming that you've defined it for a certain commit, `release` won't ask you to set a type for it manually. This will make the process of creating a release even faster.
 
 To pre-define that a commit should be excluded from the list, you can use this keyword:
 
