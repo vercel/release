@@ -20,7 +20,7 @@ const getTags = require('../lib/tags')
 const definitions = require('../lib/definitions')
 const connect = require('../lib/connect')
 const createChangelog = require('../lib/changelog')
-const handleSpinner = require('../lib/spinner')
+const { fail, create: createSpinner } = require('../lib/spinner')
 const bumpVersion = require('../lib/bump')
 const pkg = require('../package')
 const applyHook = require('../lib/hook')
@@ -79,7 +79,7 @@ const getReleaseURL = (release, edit = false) => {
 
 const createRelease = async (tag, changelog, exists) => {
   const isPre = flags.pre ? 'pre' : ''
-  handleSpinner.create(`Uploading ${isPre}release`)
+  createSpinner(`Uploading ${isPre}release`)
 
   const methodPrefix = exists ? 'edit' : 'create'
   const method = methodPrefix + 'Release'
@@ -111,7 +111,7 @@ const createRelease = async (tag, changelog, exists) => {
 
   if (!response.data) {
     console.log('\n')
-    handleSpinner.fail('Failed to upload release.')
+    fail('Failed to upload release.')
   }
 
   global.spinner.succeed()
@@ -226,7 +226,7 @@ const orderCommits = async (commits, tags, exists) => {
 
   // Update the spinner status
   console.log('')
-  handleSpinner.create('Generating the changelog')
+  createSpinner('Generating the changelog')
 
   const results = Object.assign({}, predefined, answers)
   const grouped = groupChanges(results, changeTypes)
@@ -248,14 +248,13 @@ const orderCommits = async (commits, tags, exists) => {
 }
 
 const collectChanges = async (tags, exists = false) => {
-  handleSpinner.create('Loading commit history')
-
+  createSpinner('Loading commit history')
   let commits
 
   try {
     commits = await getCommits(tags)
   } catch (err) {
-    handleSpinner.fail(err.message)
+    fail(err.message)
   }
 
   for (const commit of commits.all) {
@@ -266,7 +265,7 @@ const collectChanges = async (tags, exists = false) => {
   }
 
   if (commits.length < 1) {
-    handleSpinner.fail('No changes happened since the last release.')
+    fail('No changes happened since the last release.')
   }
 
   orderCommits(commits, tags, exists)
@@ -276,25 +275,29 @@ const checkReleaseStatus = async () => {
   let tags
 
   try {
-    tags = await getTags()
+    const unordered = await getTags()
+
+    tags = unordered.sort((a, b) => {
+      return new Date(b.date) - new Date(a.date)
+    })
   } catch (err) {
-    handleSpinner.fail('Directory is not a Git repository.')
+    fail('Directory is not a Git repository.')
   }
 
   if (tags.length < 1) {
-    handleSpinner.fail('No tags available for release.')
+    fail('No tags available for release.')
   }
 
   const synced = await branchSynced()
 
   if (!synced) {
-    handleSpinner.fail('Your branch needs to be up-to-date with origin.')
+    fail('Your branch needs to be up-to-date with origin.')
   }
 
   githubConnection = await connect()
   repoDetails = await getRepo(githubConnection)
 
-  handleSpinner.create('Checking if release already exists')
+  createSpinner('Checking if release already exists')
 
   let response
 
@@ -306,7 +309,7 @@ const checkReleaseStatus = async () => {
   } catch (err) {}
 
   if (!response) {
-    handleSpinner.fail("Couldn't check if release exists.")
+    fail("Couldn't check if release exists.")
   }
 
   if (!response.data || response.data.length < 1) {
@@ -350,27 +353,32 @@ const checkReleaseStatus = async () => {
   process.exit(1)
 }
 
-const bumpType = args.sub
-const argAmount = bumpType.length
+const main = async () => {
+  const bumpType = args.sub
+  const argAmount = bumpType.length
 
-if (argAmount === 1 || (bumpType[0] === 'pre' && argAmount === 2)) {
-  const allowedTypes = ['pre']
+  if (argAmount === 1 || (bumpType[0] === 'pre' && argAmount === 2)) {
+    const allowedTypes = ['pre']
 
-  for (const type of changeTypes) {
-    allowedTypes.push(type.handle)
+    for (const type of changeTypes) {
+      allowedTypes.push(type.handle)
+    }
+
+    const allowed = allowedTypes.includes(bumpType[0])
+    const type = bumpType[0]
+
+    if (!allowed) {
+      fail(
+        'Version type not SemVer-compatible' +
+          '("major", "minor", "patch" or "pre")'
+      )
+    }
+
+    await bumpVersion(type, bumpType[1])
   }
 
-  const allowed = allowedTypes.includes(bumpType[0])
-  const type = bumpType[0]
-
-  if (!allowed) {
-    handleSpinner.fail(
-      'Version type not SemVer-compatible ("major", "minor", "patch" or "pre")'
-    )
-    process.exit(1)
-  }
-
-  bumpVersion(type, bumpType[1])
-} else {
   checkReleaseStatus()
 }
+
+// Let the firework start
+main()
