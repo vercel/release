@@ -45,7 +45,7 @@ release pre <suffix>
 ```
 
 If `<suffix>` is "canary", the example tag `3.0.0` would be incremented to `3.0.0-canary.0`. You can use any
-word of your choice in place of `<suffix>`.
+word of your choice in place of `<suffix>`, but we generally recommend "canary" or "beta".
 
 ### Options
 
