@@ -47,6 +47,12 @@ args
 
 const flags = args.parse(process.argv)
 
+// When running `release pre`, the release
+// should automatically be marked as a pre-release
+if (args.sub[0] === 'pre') {
+  flags.pre = true
+}
+
 let githubConnection
 let repoDetails
 
