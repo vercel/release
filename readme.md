@@ -22,19 +22,19 @@ release <type>
 
 As you can see, a `<type>` argument can be passed. If you leave it out, a [GitHub Release](https://help.github.com/articles/creating-releases/) will be created from the most recent commit and tag.
 
-According to the [SemVer](https://semver.org) spec, it can have one of these values:
+According to the [SemVer](https://semver.org) spec, the argument can have one of these values:
 
 - `major`: Incompatible API changes were introduced
 - `minor`: Functionality was added in a backwards-compatible manner
 - `patch`: Backwards-compatible bug fixes were applied
 
-In addition to those values, we also support a custom one for creating pre-releases like `3.0.0-canary.1`:
+In addition to those values, we also support creating pre-releases like `3.0.0-canary.1`:
 
 ```bash
 release pre
 ```
 
-You can also apply a custom suffix in place of `canary` like this:
+You can also apply a custom suffix in place of "canary" like this:
 
 ```bash
 release pre <suffix>
