@@ -44,6 +44,10 @@ args
   .option('overwrite', 'If the release already exists, replace it')
   .option('publish', 'Instead of creating a draft, publish the release')
   .option(['H', 'hook'], 'Specify a custom file to pipe releases through')
+  .option(
+    'include',
+    'Include the latest commit in the list of detected changes'
+  )
 
 const flags = args.parse(process.argv)
 
@@ -258,7 +262,7 @@ const collectChanges = async (tags, exists = false) => {
   let commits
 
   try {
-    commits = await getCommits(tags)
+    commits = await getCommits(tags, flags.include)
   } catch (err) {
     fail(err.message)
   }
