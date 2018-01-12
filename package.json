@@ -1,6 +1,6 @@
 {
   "name": "release",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Create GitHub Releases from the command line",
   "scripts": {
     "precommit": "lint-staged",
