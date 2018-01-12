@@ -76,7 +76,6 @@
     "semver": "5.4.1",
     "tagged-versions": "1.3.0",
     "then-sleep": "1.0.1",
-    "trim": "0.0.1",
     "update-notifier": "2.3.0"
   }
 }
