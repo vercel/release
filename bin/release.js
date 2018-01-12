@@ -218,8 +218,6 @@ const orderCommits = async (commits, tags, exists) => {
       `${chalk.green('!')} Please enter the type of change for each commit:\n`
     )
 
-    console.log(questions)
-
     answers = await inquirer.prompt(questions)
 
     for (const answer in answers) {
