@@ -210,30 +210,35 @@ const orderCommits = async (commits, tags, exists) => {
   // again once new spinner gets created
   global.spinner = false
 
-  if (questions.length > 0) {
+  // By default, nothing is there yet
+  let answers = {}
+
+  if (choices) {
     console.log(
       `${chalk.green('!')} Please enter the type of change for each commit:\n`
     )
-  }
 
-  const answers = await inquirer.prompt(questions)
+    console.log(questions)
 
-  for (const answer in answers) {
-    if (!{}.hasOwnProperty.call(answers, answer)) {
-      continue
-    }
+    answers = await inquirer.prompt(questions)
 
-    const type = answers[answer]
-    const { message } = questions.find(question => question.name === answer)
+    for (const answer in answers) {
+      if (!{}.hasOwnProperty.call(answers, answer)) {
+        continue
+      }
 
-    answers[answer] = {
-      type,
-      message
+      const type = answers[answer]
+      const { message } = questions.find(question => question.name === answer)
+
+      answers[answer] = {
+        type,
+        message
+      }
     }
   }
 
   // Update the spinner status
-  if (Object.keys(answers).length > 0) {
+  if (choices) {
     console.log('')
   }
 
