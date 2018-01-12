@@ -387,7 +387,7 @@ const main = async () => {
 
     if (!allowed) {
       fail(
-        'Version type not SemVer-compatible' +
+        'Version type not SemVer-compatible ' +
           '("major", "minor", "patch" or "pre")'
       )
     }
