@@ -210,9 +210,11 @@ const orderCommits = async (commits, tags, exists) => {
   // again once new spinner gets created
   global.spinner = false
 
-  console.log(
-    `${chalk.green('!')} Please enter the type of change for each commit:\n`
-  )
+  if (questions.length > 0) {
+    console.log(
+      `${chalk.green('!')} Please enter the type of change for each commit:\n`
+    )
+  }
 
   const answers = await inquirer.prompt(questions)
 
@@ -231,14 +233,21 @@ const orderCommits = async (commits, tags, exists) => {
   }
 
   // Update the spinner status
-  console.log('')
+  if (Object.keys(answers).length > 0) {
+    console.log('')
+  }
+
   createSpinner('Generating the changelog')
 
   const results = Object.assign({}, predefined, answers)
   const grouped = groupChanges(results, changeTypes)
   const changes = await createChangelog(grouped, commits, changeTypes)
 
-  const { credits, changelog } = changes
+  let { credits, changelog } = changes
+
+  if (!changelog) {
+    changelog = 'Initial release'
+  }
 
   // Apply the `release.js` file or the one that
   // was specified using the `--hook` flag
