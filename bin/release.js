@@ -6,7 +6,7 @@ const chalk = require('chalk')
 const semVer = require('semver')
 const inquirer = require('inquirer')
 const open = require('open')
-const updateNotifier = require('update-notifier')
+const updateNotifier = require('@zeit/check-updates')
 const { red } = require('chalk')
 const nodeVersion = require('node-version')
 const sleep = require('then-sleep')
@@ -36,7 +36,7 @@ if (nodeVersion.major < 6) {
 // Let user know if there's an update
 // This isn't important when deployed to Now
 if (pkg.dist) {
-  updateNotifier({ pkg }).notify()
+  updateNotifier(pkg, 'release')
 }
 
 args
