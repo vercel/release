@@ -244,7 +244,7 @@ const orderCommits = async (commits, tags, exists) => {
 
   const results = Object.assign({}, predefined, answers)
   const grouped = groupChanges(results, changeTypes)
-  const changes = await createChangelog(grouped, commits, changeTypes)
+  const changes = await createChangelog(grouped, commits, changeTypes, flags.hook)
 
   let { credits, changelog } = changes
 
