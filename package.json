@@ -53,6 +53,7 @@
     "xo": "0.18.2"
   },
   "dependencies": {
+    "@octokit/rest": "14.0.0",
     "@zeit/check-updates": "1.0.5",
     "args": "3.0.8",
     "async-retry": "1.1.4",
@@ -65,7 +66,6 @@
     "git-spawned-stream": "1.0.0",
     "git-state": "4.0.0",
     "git-username": "0.5.0",
-    "github": "13.1.0",
     "github-username": "4.1.0",
     "inquirer": "5.0.0",
     "node-version": "1.1.0",
