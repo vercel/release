@@ -38,13 +38,6 @@
       "git add"
     ]
   },
-  "engines": {
-    "node": ">= 7.6.0"
-  },
-  "bugs": {
-    "url": "https://github.com/zeit/release/issues"
-  },
-  "homepage": "https://github.com/zeit/release#readme",
   "devDependencies": {
     "eslint-config-prettier": "2.9.0",
     "husky": "0.14.3",
