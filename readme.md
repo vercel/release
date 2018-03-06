@@ -71,7 +71,7 @@ With a custom hook, the examples above (and many more) are very easy to accompli
 By default, release will look for a file named `release.js` in the root directory of your project. This file should export a function with two parameters and always return a `String` (the final release):
 
 ```js
-module.exports = (markdown, metaData) => {
+module.exports = async (markdown, metaData) => {
   // Use the available data to create a custom release
   return markdown
 }
