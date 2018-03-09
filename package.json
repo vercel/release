@@ -1,6 +1,6 @@
 {
   "name": "release",
-  "version": "3.1.6",
+  "version": "3.1.7",
   "description": "Generate changelogs with a single command",
   "scripts": {
     "precommit": "lint-staged",
