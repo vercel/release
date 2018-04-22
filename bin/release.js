@@ -6,7 +6,7 @@ const chalk = require('chalk')
 const semVer = require('semver')
 const inquirer = require('inquirer')
 const open = require('open')
-const updateNotifier = require('@zeit/check-updates')
+const checkForUpdate = require('update-check')
 const { red } = require('chalk')
 const nodeVersion = require('node-version')
 const sleep = require('then-sleep')
@@ -31,12 +31,6 @@ if (nodeVersion.major < 6) {
     `${red('Error!')} Now requires at least version 6 of Node. Please upgrade!`
   )
   process.exit(1)
-}
-
-// Let user know if there's an update
-// This isn't important when deployed to Now
-if (pkg.dist) {
-  updateNotifier(pkg, 'release')
 }
 
 args
@@ -244,7 +238,12 @@ const orderCommits = async (commits, tags, exists) => {
 
   const results = Object.assign({}, predefined, answers)
   const grouped = groupChanges(results, changeTypes)
-  const changes = await createChangelog(grouped, commits, changeTypes, flags.hook)
+  const changes = await createChangelog(
+    grouped,
+    commits,
+    changeTypes,
+    flags.hook
+  )
 
   let { credits, changelog } = changes
 
@@ -372,6 +371,16 @@ const checkReleaseStatus = async () => {
 }
 
 const main = async () => {
+  const update = await checkForUpdate(pkg)
+
+  if (update) {
+    console.log(
+      `${chalk.bgRed(
+        'UPDATE AVAILABLE'
+      )} The latest version of \`release\` is ${update.latest}`
+    )
+  }
+
   const bumpType = args.sub
   const argAmount = bumpType.length
 
