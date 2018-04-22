@@ -288,7 +288,6 @@ const checkReleaseStatus = async () => {
 
 	try {
 		const unordered = await getTags();
-
 		tags = unordered.sort((a, b) => new Date(b.date) - new Date(a.date));
 	} catch (err) {
 		fail('Directory is not a Git repository.');
