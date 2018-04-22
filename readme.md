@@ -13,6 +13,12 @@ Firstly, install the package from [npm](https://npmjs.com/release) (you'll need 
 npm install -g release
 ```
 
+Alternatively, you can use [Yarn](https://yarnpkg.com/en/) to install it:
+
+```bash
+yarn global add release
+```
+
 Once that's done, you can run this command inside your project's directory:
 
 ```bash
