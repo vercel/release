@@ -1,7 +1,7 @@
 ![](https://raw.githubusercontent.com/zeit/art/e0348ab1848337de87ccbb713fa33345aa0ba153/release/repo-banner.png)
 
-[![Build Status](https://travis-ci.org/zeit/release.svg?branch=master)](https://travis-ci.org/zeit/release)
-[![Slack Channel](http://zeit-slackin.now.sh/badge.svg)](https://zeit.chat)
+[![Build Status](https://circleci.com/gh/zeit/release.svg?&style=shield)](https://circleci.com/gh/zeit/release)
+[![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/zeit)
 
 When run, this command line interface automatically generates a new [GitHub Release](https://help.github.com/articles/creating-releases/) and populates it with the changes (commits) made since the last release.
 
@@ -11,6 +11,12 @@ Firstly, install the package from [npm](https://npmjs.com/release) (you'll need 
 
 ```bash
 npm install -g release
+```
+
+Alternatively, you can use [Yarn](https://yarnpkg.com/en/) to install it:
+
+```bash
+yarn global add release
 ```
 
 Once that's done, you can run this command inside your project's directory:
