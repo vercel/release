@@ -1,7 +1,7 @@
 ![](https://raw.githubusercontent.com/zeit/art/e0348ab1848337de87ccbb713fa33345aa0ba153/release/repo-banner.png)
 
 [![Build Status](https://circleci.com/gh/zeit/release.svg?&style=shield)](https://circleci.com/gh/zeit/release)
-[![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/zeit)
+[![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/zeit) [![Greenkeeper badge](https://badges.greenkeeper.io/zeit/release.svg)](https://greenkeeper.io/)
 
 When run, this command line interface automatically generates a new [GitHub Release](https://help.github.com/articles/creating-releases/) and populates it with the changes (commits) made since the last release.
 
