@@ -1,6 +1,6 @@
 {
   "name": "release",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Generate changelogs with a single command",
   "scripts": {
     "test": "yarn lint",
