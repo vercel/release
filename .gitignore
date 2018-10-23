@@ -4,3 +4,6 @@ package-lock.json
 
 # logs
 npm-debug.log
+
+# VSCode
+.vscode/
