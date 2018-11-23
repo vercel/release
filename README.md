@@ -36,13 +36,38 @@ According to the [SemVer](https://semver.org) spec, the argument can have one of
 In addition to those values, we also support creating pre-releases like `3.0.0-canary.1`:
 
 ```bash
+release premajor
+release preminor
+release prepatch
 release pre
+```
+
+The following examples will show how the versions will be increased for the above options:
+
+```bash
+
+release premajor
+# will bump the version up to the next major version and down to a prerelease of that major version
+# 1.0.0 -> 2.0.0-canary.0
+
+release preminor
+# will bump the version up to the next minor version and down to a prerelease of that minor version
+# 1.0.0 -> 1.1.0-canary.0
+
+release prepatch
+# will bump the version up to the next minor version and down to a prerelease of that minor version
+# 1.0.0 -> 1.0.1-canary.0
+
+release pre
+# If called from a non-prerelease version, the prerelease will work the same as prepatch. It increments the patch version, then makes a prerelease.
+# If the input version is already a prerelease it simply increments it.
+
 ```
 
 You can also apply a custom suffix in place of "canary" like this:
 
 ```bash
-release pre <suffix>
+release premajor <suffix>
 ```
 
 Assuming that you provide "beta" as the `<suffix>` your release will then be `3.0.0-beta.1` – and so on...
@@ -77,15 +102,15 @@ By default, release will look for a file named `release.js` in the root director
 
 ```js
 module.exports = async (markdown, metaData) => {
-  // Use the available data to create a custom release
-  return markdown
-}
+	// Use the available data to create a custom release
+	return markdown;
+};
 ```
 
 In the example above, `markdown` contains the release as a `String` (if you just want to replace something). In addition, `metaData` contains these properties:
 
 | Property Name    | Content                                               |
-|------------------|-------------------------------------------------------|
+| ---------------- | ----------------------------------------------------- |
 | `changeTypes`    | The types of changes and their descriptions           |
 | `commits`        | A list of commits since the latest release            |
 | `groupedCommits` | Similar to `commits`, but grouped by the change types |

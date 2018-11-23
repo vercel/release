@@ -163,7 +163,9 @@ const orderCommits = async (commits, tags, exists) => {
 					continue;
 				}
 
-				const questionExists = questions.find(question => question.message === line);
+				const questionExists = questions.find(
+					question => question.message === line
+				);
 
 				if (questionExists) {
 					continue;
@@ -241,7 +243,12 @@ const orderCommits = async (commits, tags, exists) => {
 
 	const results = Object.assign({}, predefined, answers);
 	const grouped = groupChanges(results, changeTypes);
-	const changes = await createChangelog(grouped, commits, changeTypes, flags.hook);
+	const changes = await createChangelog(
+		grouped,
+		commits,
+		changeTypes,
+		flags.hook
+	);
 
 	let {credits, changelog} = changes;
 
@@ -380,21 +387,18 @@ const main = async () => {
 
 	const bumpType = args.sub;
 	const argAmount = bumpType.length;
+	const preTypes = ['pre', 'premajor', 'preminor', 'prepatch'];
 
-	if (argAmount === 1 || (bumpType[0] === 'pre' && argAmount === 2)) {
-		const allowedTypes = ['pre'];
+	if (argAmount === 1 || (preTypes.includes(bumpType[0]) && argAmount === 2)) {
+		const allowedTypes = changeTypes.map(type => type.handle);
 
-		for (const type of changeTypes) {
-			allowedTypes.push(type.handle);
-		}
-
-		const allowed = allowedTypes.includes(bumpType[0]);
+		const allowed = allowedTypes.concat(preTypes).includes(bumpType[0]);
 		const type = bumpType[0];
 
 		if (!allowed) {
 			fail(
 				'Version type not SemVer-compatible ' +
-          '("major", "minor", "patch" or "pre")'
+					'("major", "minor", "patch", "premajor", "preminor", "prepatch" or "pre")'
 			);
 		}
 
