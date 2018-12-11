@@ -84,7 +84,8 @@ const createRelease = async (tag, changelog, exists) => {
 
 	const methodPrefix = exists ? 'edit' : 'create';
 	const method = `${methodPrefix}Release`;
-	const {pre, publish, url} = flags;
+	const {pre, publish, showUrl} = flags;
+
 
 	const body = {
 		owner: repoDetails.user,
@@ -121,7 +122,7 @@ const createRelease = async (tag, changelog, exists) => {
 	// Wait for the GitHub UI to render the release
 	await sleep(500);
 
-	if (url && releaseURL) {
+	if (showUrl && releaseURL) {
 		console.log(`\n${chalk.bold('Done!')} ${releaseURL}`);
 	} else if (releaseURL) {
 		open(releaseURL);
@@ -356,11 +357,11 @@ const checkReleaseStatus = async () => {
 
 	const releaseURL = getReleaseURL(existingRelease);
 
-	if (!flags.url && releaseURL) {
+	if (!flags.showUrl && releaseURL) {
 		open(releaseURL);
 	}
 
-	const alreadyThere = `Release already exists ${flags.url ? releaseURL : 'Opening in browser...'}`;
+	const alreadyThere = `Release already exists ${flags.showUrl ? releaseURL : 'Opening in browser...'}`;
 	console.error(`${chalk.red('Error!')} ${alreadyThere}`);
 
 	process.exit(1);
