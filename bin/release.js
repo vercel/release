@@ -38,7 +38,7 @@ args
 	.option('overwrite', 'If the release already exists, replace it')
 	.option('publish', 'Instead of creating a draft, publish the release')
 	.option(['H', 'hook'], 'Specify a custom file to pipe releases through')
-	.option('url', 'Show release URL instead of opening it in the browser');
+	.option('show-url', 'Show the release URL instead of opening it in the browser');
 
 const flags = args.parse(process.argv);
 
