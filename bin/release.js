@@ -361,7 +361,7 @@ const checkReleaseStatus = async () => {
 		open(releaseURL);
 	}
 
-	const alreadyThere = `Release already exists ${flags.showUrl ? releaseURL : 'Opening in browser...'}`;
+	const alreadyThere = `Release already exists${flags.showUrl ? `: ${releaseURL}` : '. Opening in browser...'}`;
 	console.error(`${chalk.red('Error!')} ${alreadyThere}`);
 
 	process.exit(1);
