@@ -37,7 +37,8 @@ args
 	.option('pre', 'Mark the release as prerelease')
 	.option('overwrite', 'If the release already exists, replace it')
 	.option('publish', 'Instead of creating a draft, publish the release')
-	.option(['H', 'hook'], 'Specify a custom file to pipe releases through');
+	.option(['H', 'hook'], 'Specify a custom file to pipe releases through')
+	.option('show-url', 'Show the release URL instead of opening it in the browser');
 
 const flags = args.parse(process.argv);
 
@@ -86,7 +87,8 @@ const createRelease = async (tag, changelog, exists) => {
 
 	const methodPrefix = exists ? 'edit' : 'create';
 	const method = `${methodPrefix}Release`;
-	const {pre, publish} = flags;
+	const {pre, publish, showUrl} = flags;
+
 
 	const body = {
 		owner: repoDetails.user,
@@ -123,11 +125,12 @@ const createRelease = async (tag, changelog, exists) => {
 	// Wait for the GitHub UI to render the release
 	await sleep(500);
 
-	if (releaseURL) {
+	if (showUrl && releaseURL) {
+		console.log(`\n${chalk.bold('Done!')} ${releaseURL}`);
+	} else if (releaseURL) {
 		open(releaseURL);
+		console.log(`\n${chalk.bold('Done!')} Opening release in browser...`);
 	}
-
-	console.log(`\n${chalk.bold('Done!')} Opening release in browser...`);
 };
 
 const orderCommits = async (commits, tags, exists) => {
@@ -357,11 +360,11 @@ const checkReleaseStatus = async () => {
 
 	const releaseURL = getReleaseURL(existingRelease);
 
-	if (releaseURL) {
+	if (!flags.showUrl && releaseURL) {
 		open(releaseURL);
 	}
 
-	const alreadyThere = 'Release already exists. Opening in browser...';
+	const alreadyThere = `Release already exists${flags.showUrl ? `: ${releaseURL}` : '. Opening in browser...'}`;
 	console.error(`${chalk.red('Error!')} ${alreadyThere}`);
 
 	process.exit(1);
