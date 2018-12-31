@@ -33,12 +33,13 @@ if (nodeVersion.major < 6) {
 	process.exit(1);
 }
 
-args
-	.option('pre', 'Mark the release as prerelease')
+args.option('pre', 'Mark the release as prerelease')
 	.option('overwrite', 'If the release already exists, replace it')
 	.option('publish', 'Instead of creating a draft, publish the release')
 	.option(['H', 'hook'], 'Specify a custom file to pipe releases through')
-	.option('show-url', 'Show the release URL instead of opening it in the browser');
+	.option('strict', 'Search previous release only in current branch', false)
+	.option(['t', 'previous-tag'], 'Specify previous release', '')
+	.option(['u', 'show-url'], 'Show the release URL instead of opening it in the browser');
 
 const flags = args.parse(process.argv);
 
@@ -293,7 +294,10 @@ const checkReleaseStatus = async () => {
 	let tags;
 
 	try {
-		const unordered = await getTags();
+		const unordered = await getTags({
+			strict: flags.strict,
+			previousTag: flags.previousTag
+		});
 		tags = unordered.sort((a, b) => new Date(b.date) - new Date(a.date));
 	} catch (err) {
 		fail('Directory is not a Git repository.');
