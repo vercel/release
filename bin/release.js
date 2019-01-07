@@ -373,14 +373,14 @@ const checkReleaseStatus = async () => {
 	if (!flags.showUrl) {
 		try {
 			await open(releaseURL);
-			console.log(`${prefix}. Opened in browser...`);
+			console.error(`${prefix}. Opened in browser...`);
 
 			return;
 		// eslint-disable-next-line no-empty
 		} catch (err) {}
 	}
 
-	console.log(`${prefix}: ${releaseURL}`);
+	console.error(`${prefix}: ${releaseURL}`);
 	process.exit(1);
 };
 
