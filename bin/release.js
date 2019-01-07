@@ -126,12 +126,17 @@ const createRelease = async (tag, changelog, exists) => {
 	// Wait for the GitHub UI to render the release
 	await sleep(500);
 
-	if (showUrl && releaseURL) {
-		console.log(`\n${chalk.bold('Done!')} ${releaseURL}`);
-	} else if (releaseURL) {
-		open(releaseURL);
-		console.log(`\n${chalk.bold('Done!')} Opening release in browser...`);
+	if (!showUrl) {
+		try {
+			await open(releaseURL);
+			console.log(`\n${chalk.bold('Done!')} Opened release in browser...`);
+
+			return;
+		// eslint-disable-next-line no-empty
+		} catch (err) {}
 	}
+
+	console.log(`\n${chalk.bold('Done!')} ${releaseURL}`);
 };
 
 const orderCommits = async (commits, tags, exists) => {
@@ -245,7 +250,7 @@ const orderCommits = async (commits, tags, exists) => {
 
 	const results = Object.assign({}, predefined, answers);
 	const grouped = groupChanges(results, changeTypes);
-	const changes = await createChangelog(grouped, commits, changeTypes, flags.hook);
+	const changes = await createChangelog(grouped, commits, changeTypes, flags.hook, flags.showUrl);
 
 	let {credits, changelog} = changes;
 
@@ -313,7 +318,7 @@ const checkReleaseStatus = async () => {
 		fail('Your branch needs to be up-to-date with origin.');
 	}
 
-	githubConnection = await connect();
+	githubConnection = await connect(flags.showUrl);
 	repoDetails = await getRepo(githubConnection);
 
 	createSpinner('Checking if release already exists');
@@ -363,14 +368,19 @@ const checkReleaseStatus = async () => {
 	console.log('');
 
 	const releaseURL = getReleaseURL(existingRelease);
+	const prefix = `${chalk.red('Error!')} Release already exists`;
 
-	if (!flags.showUrl && releaseURL) {
-		open(releaseURL);
+	if (!flags.showUrl) {
+		try {
+			await open(releaseURL);
+			console.log(`${prefix}. Opened in browser...`);
+
+			return;
+		// eslint-disable-next-line no-empty
+		} catch (err) {}
 	}
 
-	const alreadyThere = `Release already exists${flags.showUrl ? `: ${releaseURL}` : '. Opening in browser...'}`;
-	console.error(`${chalk.red('Error!')} ${alreadyThere}`);
-
+	console.log(`${prefix}: ${releaseURL}`);
 	process.exit(1);
 };
 
