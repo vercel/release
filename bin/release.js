@@ -37,7 +37,6 @@ args.option('pre', 'Mark the release as prerelease')
 	.option('overwrite', 'If the release already exists, replace it')
 	.option('publish', 'Instead of creating a draft, publish the release')
 	.option(['H', 'hook'], 'Specify a custom file to pipe releases through')
-	.option('strict', 'Search previous release only in current branch', false)
 	.option(['t', 'previous-tag'], 'Specify previous release', '')
 	.option(['u', 'show-url'], 'Show the release URL instead of opening it in the browser');
 
@@ -300,7 +299,6 @@ const checkReleaseStatus = async () => {
 
 	try {
 		const unordered = await getTags({
-			strict: flags.strict,
 			previousTag: flags.previousTag
 		});
 		tags = unordered.sort((a, b) => new Date(b.date) - new Date(a.date));
