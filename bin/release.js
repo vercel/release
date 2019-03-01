@@ -127,7 +127,7 @@ const createRelease = async (tag, changelog, exists) => {
 
 	if (!showUrl) {
 		try {
-			await open(releaseURL);
+			open(releaseURL, {wait: false});
 			console.log(`\n${chalk.bold('Done!')} Opened release in browser...`);
 
 			return;
@@ -370,7 +370,7 @@ const checkReleaseStatus = async () => {
 
 	if (!flags.showUrl) {
 		try {
-			await open(releaseURL);
+			open(releaseURL, {wait: false});
 			console.error(`${prefix}. Opened in browser...`);
 
 			return;
