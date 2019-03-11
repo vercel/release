@@ -93,6 +93,20 @@ In the example above, `markdown` contains the release as a `String` (if you just
 
 **Hint:** You can specify a custom location for the hook file using the `--hook` or `-H` flag, which takes in a path relative to the current working directory.
 
+## Creating past releases
+
+If you missed a release for a previous tag, you can `git reset` to it and then run `release`. You can create releases in batch for all of your tags with:
+
+```sh
+# Unsaved changes will be lost. Push your changes to GitHub before running this
+for tag in $(git tag); do
+	git reset --hard $tag && release;
+done
+git reset --hard origin/master
+```
+
+Existing releases will automatically be skipped.
+
 ## Why?
 
 As we at [ZEIT](https://github.com/zeit) moved all of our GitHub repositories from keeping a `HISTORY.md` file to using [GitHub Releases](https://help.github.com/articles/creating-releases/), we needed a way to automatically generate these releases from our own devices, rather than always having to open a page in the browser and manually add the notes for each change.
