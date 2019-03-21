@@ -30,7 +30,7 @@
     "eslint": "4.19.1"
   },
   "dependencies": {
-    "@octokit/rest": "15.2.6",
+    "@octokit/rest": "16.20.0",
     "args": "4.0.0",
     "async-retry": "1.2.1",
     "capitalize": "1.0.0",
