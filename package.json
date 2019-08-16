@@ -51,7 +51,6 @@
     "random-string": "0.2.0",
     "semver": "5.5.0",
     "tagged-versions": "1.3.0",
-    "then-sleep": "1.0.1",
     "update-check": "1.3.2"
   },
   "eslintConfig": {
