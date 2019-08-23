@@ -9,9 +9,9 @@ const open = require('opn');
 const checkForUpdate = require('update-check');
 const {red} = require('chalk');
 const nodeVersion = require('node-version');
+const sleep = require('delay');
 
 // Utilities
-const sleep = require('../lib/sleep');
 const groupChanges = require('../lib/group');
 const {branchSynced, getRepo} = require('../lib/repo');
 const getCommits = require('../lib/commits');
