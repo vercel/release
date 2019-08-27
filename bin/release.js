@@ -9,7 +9,7 @@ const open = require('opn');
 const checkForUpdate = require('update-check');
 const {red} = require('chalk');
 const nodeVersion = require('node-version');
-const sleep = require('then-sleep');
+const sleep = require('delay');
 
 // Utilities
 const groupChanges = require('../lib/group');
