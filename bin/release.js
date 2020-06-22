@@ -13,6 +13,7 @@ const sleep = require('delay');
 
 // Utilities
 const groupChanges = require('../lib/group');
+const groupChangesByLabels = require('../lib/group-by-labels');
 const {branchSynced, getRepo} = require('../lib/repo');
 const getCommits = require('../lib/commits');
 const getChoices = require('../lib/choices');
@@ -24,6 +25,7 @@ const {fail, create: createSpinner} = require('../lib/spinner');
 const bumpVersion = require('../lib/bump');
 const pkg = require('../package');
 const applyHook = require('../lib/hook');
+const loadConfig = require('../lib/load-config');
 
 // Throw an error if node version is too low
 if (nodeVersion.major < 6) {
@@ -138,7 +140,7 @@ const createRelease = async (tag, changelog, exists) => {
 	console.log(`\n${chalk.bold('Done!')} ${releaseURL}`);
 };
 
-const orderCommits = async (commits, tags, exists) => {
+const createQuestionsForCommits = (commits, tags) => {
 	const questions = [];
 	const predefined = {};
 
@@ -209,6 +211,25 @@ const orderCommits = async (commits, tags, exists) => {
 		});
 	}
 
+	return {questions, predefined};
+};
+
+const orderCommits = async (commits, tags, exists) => {
+	const config = loadConfig();
+	const isLabelsMode = config.labelsMode.labels.length > 0;
+
+	const choices = getChoices(changeTypes, tags);
+
+	// Show the latest changes first
+	commits.all.reverse();
+
+	let questions = [];
+	let predefined = {};
+
+	if (!isLabelsMode) {
+		({questions, predefined} = createQuestionsForCommits(commits, tags));
+	}
+
 	global.spinner.succeed();
 
 	// Prevents the spinner from getting succeeded
@@ -218,7 +239,7 @@ const orderCommits = async (commits, tags, exists) => {
 	// By default, nothing is there yet
 	let answers = {};
 
-	if (choices) {
+	if (choices && !isLabelsMode) {
 		console.log(
 			`${chalk.green('!')} Please enter the type of change for each commit:\n`
 		);
@@ -247,8 +268,24 @@ const orderCommits = async (commits, tags, exists) => {
 
 	createSpinner('Generating the changelog');
 
+	if (isLabelsMode) {
+		changeTypes.push(...config.labelsMode.labels.map(labelInfo => ({
+			handle: labelInfo.name,
+			name: labelInfo.sectionName,
+			pluralName: labelInfo.sectionPluralName
+		})));
+		changeTypes.push({
+			handle: 'fallback-section',
+			name: config.labelsMode.fallbackSectionName,
+			pluralName: config.labelsMode.fallbackSectionPluralName
+		});
+	}
+
 	const results = Object.assign({}, predefined, answers);
-	const grouped = groupChanges(results, changeTypes);
+	const grouped = isLabelsMode
+		? await groupChangesByLabels(commits.all, changeTypes, flags.hook, flags.showUrl)
+		: groupChanges(results, changeTypes);
+
 	const changes = await createChangelog(grouped, commits, changeTypes, flags.hook, flags.showUrl);
 
 	let {credits, changelog} = changes;
@@ -415,6 +452,9 @@ const main = async () => {
 
 		await bumpVersion(type, bumpType[1]);
 	}
+
+	// Preload config file
+	loadConfig();
 
 	checkReleaseStatus();
 };
