@@ -107,7 +107,7 @@ This file is optional, currently its only purpose is to manage the [Labels Mode]
 
 ## Labels Mode
 
-By default, release will ask you the type of a given change (major/minor/patch). In Labels Mode, you can configure release to automatically categorize the changes by the labels in the PR of the change. The mode is enabled when the `labelsMode.labels` array has 1 or more items.
+By default, release will ask you the type of a given change (major/minor/patch). In Labels Mode, you can configure release to automatically categorize the changes by the labels in their PR (if available). This mode is enabled when the `labelsMode.labels` array has 1 or more items.
 
 Example configuration (`releaseconfig.json`):
 
@@ -132,7 +132,7 @@ This will add all the PRs with the `core` label into a section named "Core Chang
 
 The changes that don't match any labels will be added into the fallback section (see the config table below for default values).
 
-In case of multiple labels, the labels defined first will take priority, so a PR with both `core` and `documentation` labels will be added into the "Core Changes" section.
+In case of multiple labels, the labels defined first will take priority. So by the above config, a PR with both `core` and `documentation` labels will be added into the "Core Changes" section.
 
 ### Properties of `labelsMode`:
 
