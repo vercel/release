@@ -267,6 +267,7 @@ const orderCommits = async (commits, tags, exists) => {
 	createSpinner('Generating the changelog');
 
 	if (isLabelsMode) {
+		// Add all the configured labels as possible sections
 		changeTypes.push(...config.labelsMode.labels.map(labelInfo => ({
 			handle: labelInfo.name,
 			pluralName: labelInfo.sectionName
@@ -449,7 +450,7 @@ const main = async () => {
 		await bumpVersion(type, bumpType[1]);
 	}
 
-	// Preload config file
+	// Preload the config file
 	loadConfig();
 
 	checkReleaseStatus();
