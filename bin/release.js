@@ -140,11 +140,9 @@ const createRelease = async (tag, changelog, exists) => {
 	console.log(`\n${chalk.bold('Done!')} ${releaseURL}`);
 };
 
-const createQuestionsForCommits = (commits, tags) => {
+const createQuestionsForCommits = (choices, commits) => {
 	const questions = [];
 	const predefined = {};
-
-	const choices = getChoices(changeTypes, tags);
 
 	// Show the latest changes first
 	commits.all.reverse();
@@ -227,7 +225,7 @@ const orderCommits = async (commits, tags, exists) => {
 	let predefined = {};
 
 	if (!isLabelsMode) {
-		({questions, predefined} = createQuestionsForCommits(commits, tags));
+		({questions, predefined} = createQuestionsForCommits(choices, commits));
 	}
 
 	global.spinner.succeed();
