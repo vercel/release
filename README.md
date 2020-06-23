@@ -99,6 +99,54 @@ In the example above, `markdown` contains the release as a `String` (if you just
 
 **Hint:** You can specify a custom location for the hook file using the `--hook` or `-H` flag, which takes in a path relative to the current working directory.
 
+## Configuration file
+
+The configuration file can be placed in the root directory of your project or inside the `.github` folder, with the name `releaseconfig.json`.
+
+This file is optional, currently its only purpose is to manage the [Labels Mode](#labels-mode).
+
+## Labels Mode
+
+By default, release will ask you the type of a given change (major/minor/patch). In Labels Mode, you can configure release to automatically categorize the changes by the labels in the PR of the change. The mode is enabled when the `labelsMode.labels` array has 1 or more items.
+
+Example configuration (`releaseconfig.json`):
+
+```json
+{
+  "labelsMode": {
+    "labels": [
+      {
+        "name": "core",
+        "sectionName": "Core Change",
+        "sectionPluralName": "Core Changes"
+      },
+      {
+        "name": "documentation",
+        "sectionName": "Documentation Change",
+        "sectionPluralName": "Documentation Changes"
+      }
+	]
+  }
+}
+```
+
+This will add all the PRs with the `core` label into a section named "Core Changes", and the PRs with the `documentation` label into a section named "Documentation Changes".
+
+The changes that don't match any labels will be added into the fallback section (see the config table below for default values).
+
+In case of multiple labels, the labels defined first will take priority, so a PR with both `core` and `documentation` labels will be added into the "Core Changes" section.
+
+### Properties of `labelsMode`:
+
+| Property Name              | Content                                            | Default value
+|----------------------------|----------------------------------------------------|-------------------------------
+| `labels`		             | Array of labels                                    | `[]`
+| `labels.name`              | The name of the label in your GitHub repository    | N/A
+| `labels.sectionName`       | The name of the section in the singular            | N/A
+| `labels.sectionPluralName` | The name of the section in the plural              | N/A
+| `fallbackSectionName`      | The name of the fallback section in the singular   | `"Misc Change"`
+| `fallbackSectionPluralName`| The name of the fallback section in the plural     | `"Misc Changes"`
+
 ## Why?
 
 As we at [ZEIT](https://github.com/zeit) moved all of our GitHub repositories from keeping a `HISTORY.md` file to using [GitHub Releases](https://help.github.com/articles/creating-releases/), we needed a way to automatically generate these releases from our own devices, rather than always having to open a page in the browser and manually add the notes for each change.
