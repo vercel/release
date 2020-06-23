@@ -138,7 +138,7 @@ In case of multiple labels, the labels defined first will take priority. So by t
 
 | Property Name              | Content                                          | Default value
 |----------------------------|--------------------------------------------------|-------------------------------
-| `labels`		             | Array of labels                                  | `[]`
+| `labels`                   | Array of labels                                  | `[]`
 | `labels.name`              | The name of the label in your GitHub repository  | N/A
 | `labels.sectionName`       | The name of the label section                    | N/A
 | `fallbackSectionName`      | The name of the fallback section                 | `"Misc Changes"`
