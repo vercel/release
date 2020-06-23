@@ -138,14 +138,12 @@ In case of multiple labels, the labels defined first will take priority, so a PR
 
 ### Properties of `labelsMode`:
 
-| Property Name              | Content                                            | Default value
-|----------------------------|----------------------------------------------------|-------------------------------
-| `labels`		             | Array of labels                                    | `[]`
-| `labels.name`              | The name of the label in your GitHub repository    | N/A
-| `labels.sectionName`       | The name of the section in the singular            | N/A
-| `labels.sectionPluralName` | The name of the section in the plural              | N/A
-| `fallbackSectionName`      | The name of the fallback section in the singular   | `"Misc Change"`
-| `fallbackSectionPluralName`| The name of the fallback section in the plural     | `"Misc Changes"`
+| Property Name              | Content                                          | Default value
+|----------------------------|--------------------------------------------------|-------------------------------
+| `labels`		             | Array of labels                                  | `[]`
+| `labels.name`              | The name of the label in your GitHub repository  | N/A
+| `labels.sectionName`       | The name of the label section                    | N/A
+| `fallbackSectionName`      | The name of the fallback section                 | `"Misc Changes"`
 
 ## Why?
 

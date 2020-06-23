@@ -269,13 +269,11 @@ const orderCommits = async (commits, tags, exists) => {
 	if (isLabelsMode) {
 		changeTypes.push(...config.labelsMode.labels.map(labelInfo => ({
 			handle: labelInfo.name,
-			name: labelInfo.sectionName,
-			pluralName: labelInfo.sectionPluralName
+			pluralName: labelInfo.sectionName
 		})));
 		changeTypes.push({
 			handle: '__fallback',
-			name: config.labelsMode.fallbackSectionName,
-			pluralName: config.labelsMode.fallbackSectionPluralName
+			pluralName: config.labelsMode.fallbackSectionName
 		});
 	}
 
