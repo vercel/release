@@ -117,13 +117,11 @@ Example configuration (`releaseconfig.json`):
     "labels": [
       {
         "name": "core",
-        "sectionName": "Core Change",
-        "sectionPluralName": "Core Changes"
+        "sectionName": "Core Changes"
       },
       {
         "name": "documentation",
-        "sectionName": "Documentation Change",
-        "sectionPluralName": "Documentation Changes"
+        "sectionName": "Documentation Changes"
       }
 	]
   }
