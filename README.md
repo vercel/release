@@ -123,7 +123,7 @@ Example configuration (`releaseconfig.json`):
         "name": "documentation",
         "sectionName": "Documentation Changes"
       }
-	]
+    ]
   }
 }
 ```
