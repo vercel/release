@@ -275,7 +275,7 @@ const orderCommits = async (commits, tags, exists) => {
 			pluralName: labelInfo.sectionPluralName
 		})));
 		changeTypes.push({
-			handle: 'fallback-section',
+			handle: '__fallback',
 			name: config.labelsMode.fallbackSectionName,
 			pluralName: config.labelsMode.fallbackSectionPluralName
 		});

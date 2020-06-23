@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@octokit/rest": "15.2.6",
+    "ajv": "6.12.2",
     "args": "4.0.0",
     "async-retry": "1.2.1",
     "capitalize": "1.0.0",
