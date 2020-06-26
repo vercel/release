@@ -99,6 +99,25 @@ In the example above, `markdown` contains the release as a `String` (if you just
 
 **Hint:** You can specify a custom location for the hook file using the `--hook` or `-H` flag, which takes in a path relative to the current working directory.
 
+## Configuration
+
+The hook file can additionally export a `config` object to change the behavior of release. Example:
+
+```js
+module.exports = async (markdown, metaData) => {
+  return markdown
+}
+
+module.exports.config = {
+  skipQuestions: false
+};
+```
+
+### `skipQuestions`
+##### Default value: `false`
+
+If `true`, release won't ask for the type of the changes, creating a simple list without the headings.
+
 ## Why?
 
 As we at [ZEIT](https://github.com/zeit) moved all of our GitHub repositories from keeping a `HISTORY.md` file to using [GitHub Releases](https://help.github.com/articles/creating-releases/), we needed a way to automatically generate these releases from our own devices, rather than always having to open a page in the browser and manually add the notes for each change.
