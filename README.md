@@ -6,7 +6,7 @@
 </a>
 
 
-[![Build Status](https://circleci.com/gh/zeit/release.svg?&style=shield)](https://circleci.com/gh/zeit/release)
+[![Build Status](https://circleci.com/gh/vercel/release.svg?&style=shield)](https://circleci.com/gh/vercel/release)
 [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/zeit)
 
 When run, this command line interface automatically generates a new [GitHub Release](https://help.github.com/articles/creating-releases/) and populates it with the changes (commits) made since the last release.
