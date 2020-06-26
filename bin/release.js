@@ -20,9 +20,10 @@ const getTags = require('../lib/tags');
 const definitions = require('../lib/definitions');
 const connect = require('../lib/connect');
 const createChangelog = require('../lib/changelog');
-const {fail, create: createSpinner} = require('../lib/spinner');
+const {fail, create: createSpinner, succeed: succeedSpinner} = require('../lib/spinner');
 const bumpVersion = require('../lib/bump');
 const pkg = require('../package');
+const loadHookFile = require('../lib/load-hook-file');
 const applyHook = require('../lib/hook');
 
 // Throw an error if node version is too low
@@ -139,6 +140,8 @@ const createRelease = async (tag, changelog, exists) => {
 };
 
 const orderCommits = async (commits, tags, exists) => {
+	const {config} = loadHookFile(flags.hook);
+
 	const questions = [];
 	const predefined = {};
 
@@ -201,6 +204,19 @@ const orderCommits = async (commits, tags, exists) => {
 			continue;
 		}
 
+		// If we are skipping the questions, don't let them be included
+		// in the list
+		if (config.skipQuestions) {
+			predefined[commit.hash] = {
+				// The type doesn't matter since it is not included in the
+				// final changelog
+				type: 'patch',
+				message
+			};
+
+			continue;
+		}
+
 		questions.push({
 			name: commit.hash,
 			message,
@@ -209,16 +225,12 @@ const orderCommits = async (commits, tags, exists) => {
 		});
 	}
 
-	global.spinner.succeed();
-
-	// Prevents the spinner from getting succeeded
-	// again once new spinner gets created
-	global.spinner = false;
+	succeedSpinner();
 
 	// By default, nothing is there yet
 	let answers = {};
 
-	if (choices) {
+	if (choices && questions.length > 0) {
 		console.log(
 			`${chalk.green('!')} Please enter the type of change for each commit:\n`
 		);
@@ -238,18 +250,18 @@ const orderCommits = async (commits, tags, exists) => {
 				message
 			};
 		}
-	}
 
-	// Update the spinner status
-	if (choices) {
-		console.log('');
+		// Update the spinner status
+		if (choices) {
+			console.log('');
+		}
 	}
 
 	createSpinner('Generating the changelog');
 
 	const results = Object.assign({}, predefined, answers);
 	const grouped = groupChanges(results, changeTypes);
-	const changes = await createChangelog(grouped, commits, changeTypes, flags.hook, flags.showUrl);
+	const changes = await createChangelog(grouped, commits, changeTypes, config.skipQuestions, flags.hook, flags.showUrl);
 
 	let {credits, changelog} = changes;
 
@@ -415,6 +427,9 @@ const main = async () => {
 
 		await bumpVersion(type, bumpType[1]);
 	}
+
+	// Preload hook file
+	loadHookFile(flags.hook);
 
 	checkReleaseStatus();
 };
