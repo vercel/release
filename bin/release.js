@@ -39,7 +39,7 @@ args.option('pre', 'Mark the release as prerelease')
 	.option(['H', 'hook'], 'Specify a custom file to pipe releases through')
 	.option(['t', 'previous-tag'], 'Specify previous release', '')
 	.option(['u', 'show-url'], 'Show the release URL instead of opening it in the browser')
-	.option(['S', 'skip-questions'], 'Skip the questions and create a simple list without the headings');
+	.option(['s', 'skip-questions'], 'Skip the questions and create a simple list without the headings');
 
 const flags = args.parse(process.argv);
 
