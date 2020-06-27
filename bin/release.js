@@ -20,10 +20,9 @@ const getTags = require('../lib/tags');
 const definitions = require('../lib/definitions');
 const connect = require('../lib/connect');
 const createChangelog = require('../lib/changelog');
-const {fail, create: createSpinner, succeed: succeedSpinner} = require('../lib/spinner');
+const {fail, create: createSpinner} = require('../lib/spinner');
 const bumpVersion = require('../lib/bump');
 const pkg = require('../package');
-const loadHookFile = require('../lib/load-hook-file');
 const applyHook = require('../lib/hook');
 
 // Throw an error if node version is too low
@@ -39,7 +38,8 @@ args.option('pre', 'Mark the release as prerelease')
 	.option('publish', 'Instead of creating a draft, publish the release')
 	.option(['H', 'hook'], 'Specify a custom file to pipe releases through')
 	.option(['t', 'previous-tag'], 'Specify previous release', '')
-	.option(['u', 'show-url'], 'Show the release URL instead of opening it in the browser');
+	.option(['u', 'show-url'], 'Show the release URL instead of opening it in the browser')
+	.option(['S', 'skip-questions'], 'Skip the questions and create a simple list without the headings');
 
 const flags = args.parse(process.argv);
 
@@ -140,8 +140,6 @@ const createRelease = async (tag, changelog, exists) => {
 };
 
 const orderCommits = async (commits, tags, exists) => {
-	const {config} = loadHookFile(flags.hook);
-
 	const questions = [];
 	const predefined = {};
 
@@ -206,7 +204,7 @@ const orderCommits = async (commits, tags, exists) => {
 
 		// If we are skipping the questions, don't let them be included
 		// in the list
-		if (config.skipQuestions) {
+		if (flags.skipQuestions) {
 			predefined[commit.hash] = {
 				// The type doesn't matter since it is not included in the
 				// final changelog
@@ -225,7 +223,11 @@ const orderCommits = async (commits, tags, exists) => {
 		});
 	}
 
-	succeedSpinner();
+	global.spinner.succeed();
+
+	// Prevents the spinner from getting succeeded
+	// again once new spinner gets created
+	global.spinner = false;
 
 	// By default, nothing is there yet
 	let answers = {};
@@ -261,7 +263,7 @@ const orderCommits = async (commits, tags, exists) => {
 
 	const results = Object.assign({}, predefined, answers);
 	const grouped = groupChanges(results, changeTypes);
-	const changes = await createChangelog(grouped, commits, changeTypes, config.skipQuestions, flags.hook, flags.showUrl);
+	const changes = await createChangelog(grouped, commits, changeTypes, flags.skipQuestions, flags.hook, flags.showUrl);
 
 	let {credits, changelog} = changes;
 
@@ -427,9 +429,6 @@ const main = async () => {
 
 		await bumpVersion(type, bumpType[1]);
 	}
-
-	// Preload hook file
-	loadHookFile(flags.hook);
 
 	checkReleaseStatus();
 };
