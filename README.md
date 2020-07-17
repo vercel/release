@@ -6,8 +6,8 @@
 </a>
 
 
-[![Build Status](https://circleci.com/gh/zeit/release.svg?&style=shield)](https://circleci.com/gh/zeit/release)
-[![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/zeit)
+[![Build Status](https://circleci.com/gh/vercel/release.svg?&style=shield)](https://circleci.com/gh/vercel/release)
+[![Join the community on Spectrum](https://img.shields.io/badge/Join%20the%20community-blue)](https://github.com/vercel/vercel/discussions)
 
 When run, this command line interface automatically generates a new [GitHub Release](https://help.github.com/articles/creating-releases/) and populates it with the changes (commits) made since the last release.
 
@@ -101,11 +101,11 @@ In the example above, `markdown` contains the release as a `String` (if you just
 
 ## Why?
 
-As we at [ZEIT](https://github.com/zeit) moved all of our GitHub repositories from keeping a `HISTORY.md` file to using [GitHub Releases](https://help.github.com/articles/creating-releases/), we needed a way to automatically generate these releases from our own devices, rather than always having to open a page in the browser and manually add the notes for each change.
+As we at [Vercel(Formerly ZEIT)](https://github.com/vercel) moved all of our GitHub repositories from keeping a `HISTORY.md` file to using [GitHub Releases](https://help.github.com/articles/creating-releases/), we needed a way to automatically generate these releases from our own devices, rather than always having to open a page in the browser and manually add the notes for each change.
 
 ## Contributing
 
-You can find the authentication flow [here](https://github.com/zeit/release-auth).
+You can find the authentication flow [here](https://github.com/vercel/release-auth).
 
 1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
 2. Uninstall the package if it's already installed: `npm uninstall -g release`
