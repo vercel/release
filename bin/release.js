@@ -38,7 +38,8 @@ args.option('pre', 'Mark the release as prerelease')
 	.option('publish', 'Instead of creating a draft, publish the release')
 	.option(['H', 'hook'], 'Specify a custom file to pipe releases through')
 	.option(['t', 'previous-tag'], 'Specify previous release', '')
-	.option(['u', 'show-url'], 'Show the release URL instead of opening it in the browser');
+	.option(['u', 'show-url'], 'Show the release URL instead of opening it in the browser')
+	.option(['s', 'skip-questions'], 'Skip the questions and create a simple list without the headings');
 
 const flags = args.parse(process.argv);
 
@@ -201,6 +202,19 @@ const orderCommits = async (commits, tags, exists) => {
 			continue;
 		}
 
+		// If we are skipping the questions, don't let them be included
+		// in the list
+		if (flags.skipQuestions) {
+			predefined[commit.hash] = {
+				// The type doesn't matter since it is not included in the
+				// final changelog
+				type: 'patch',
+				message
+			};
+
+			continue;
+		}
+
 		questions.push({
 			name: commit.hash,
 			message,
@@ -218,7 +232,7 @@ const orderCommits = async (commits, tags, exists) => {
 	// By default, nothing is there yet
 	let answers = {};
 
-	if (choices) {
+	if (choices && questions.length > 0) {
 		console.log(
 			`${chalk.green('!')} Please enter the type of change for each commit:\n`
 		);
@@ -238,18 +252,18 @@ const orderCommits = async (commits, tags, exists) => {
 				message
 			};
 		}
-	}
 
-	// Update the spinner status
-	if (choices) {
-		console.log('');
+		// Update the spinner status
+		if (choices) {
+			console.log('');
+		}
 	}
 
 	createSpinner('Generating the changelog');
 
 	const results = Object.assign({}, predefined, answers);
 	const grouped = groupChanges(results, changeTypes);
-	const changes = await createChangelog(grouped, commits, changeTypes, flags.hook, flags.showUrl);
+	const changes = await createChangelog(grouped, commits, changeTypes, flags.skipQuestions, flags.hook, flags.showUrl);
 
 	let {credits, changelog} = changes;
 
