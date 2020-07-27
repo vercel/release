@@ -1,13 +1,11 @@
-![](https://raw.githubusercontent.com/zeit/art/e0348ab1848337de87ccbb713fa33345aa0ba153/release/repo-banner.png)
-
+![](https://raw.githubusercontent.com/vercel/art/e0348ab1848337de87ccbb713fa33345aa0ba153/release/repo-banner.png)
 
 <a aria-label="Vercel logo" href="https://vercel.com">
-  <img src="https://img.shields.io/badge/MADE%20BY%20Vercel-000000.svg?style=for-the-badge&logo=ZEIT&labelColor=000000&logoWidth=20">
+  <img src="https://img.shields.io/badge/MADE%20BY%20Vercel-000000.svg?style=for-the-badge&logo=vercel&labelColor=000000&logoWidth=20">
 </a>
 
-
-[![Build Status](https://circleci.com/gh/zeit/release.svg?&style=shield)](https://circleci.com/gh/zeit/release)
-[![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/zeit)
+[![Build Status](https://circleci.com/gh/vercel/release.svg?&style=shield)](https://circleci.com/gh/vercel/release)
+[![Join the community on GitHub Discussions](https://img.shields.io/badge/Join%20the%20community-blueviolet.svg?style=for-the-badge&logo=vercel&labelColor=000000&logoWidth=20)](https://github.com/vercel/vercel/discussions)
 
 When run, this command line interface automatically generates a new [GitHub Release](https://help.github.com/articles/creating-releases/) and populates it with the changes (commits) made since the last release.
 
@@ -35,9 +33,9 @@ As you can see, a `<type>` argument can be passed. If you leave it out, a [GitHu
 
 According to the [SemVer](https://semver.org) spec, the argument can have one of these values:
 
-- `major`: Incompatible API changes were introduced
-- `minor`: Functionality was added in a backwards-compatible manner
-- `patch`: Backwards-compatible bug fixes were applied
+-   `major`: Incompatible API changes were introduced
+-   `minor`: Functionality was added in a backwards-compatible manner
+-   `patch`: Backwards-compatible bug fixes were applied
 
 In addition to those values, we also support creating pre-releases like `3.0.0-canary.1`:
 
@@ -83,15 +81,15 @@ By default, release will look for a file named `release.js` in the root director
 
 ```js
 module.exports = async (markdown, metaData) => {
-  // Use the available data to create a custom release
-  return markdown
-}
+	// Use the available data to create a custom release
+	return markdown;
+};
 ```
 
 In the example above, `markdown` contains the release as a `String` (if you just want to replace something). In addition, `metaData` contains these properties:
 
 | Property Name    | Content                                               |
-|------------------|-------------------------------------------------------|
+| ---------------- | ----------------------------------------------------- |
 | `changeTypes`    | The types of changes and their descriptions           |
 | `commits`        | A list of commits since the latest release            |
 | `groupedCommits` | Similar to `commits`, but grouped by the change types |
@@ -101,11 +99,11 @@ In the example above, `markdown` contains the release as a `String` (if you just
 
 ## Why?
 
-As we at [ZEIT](https://github.com/zeit) moved all of our GitHub repositories from keeping a `HISTORY.md` file to using [GitHub Releases](https://help.github.com/articles/creating-releases/), we needed a way to automatically generate these releases from our own devices, rather than always having to open a page in the browser and manually add the notes for each change.
+As we at [Vercel](https://github.com/vercel) moved all of our GitHub repositories from keeping a `HISTORY.md` file to using [GitHub Releases](https://help.github.com/articles/creating-releases/), we needed a way to automatically generate these releases from our own devices, rather than always having to open a page in the browser and manually add the notes for each change.
 
 ## Contributing
 
-You can find the authentication flow [here](https://github.com/zeit/release-auth).
+You can find the authentication flow [here](https://github.com/vercel/release-auth).
 
 1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
 2. Uninstall the package if it's already installed: `npm uninstall -g release`

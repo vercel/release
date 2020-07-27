@@ -11,7 +11,7 @@
     "bin",
     "lib"
   ],
-  "repository": "zeit/release",
+  "repository": "vercel/release",
   "keywords": [
     "github",
     "releases",
