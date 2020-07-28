@@ -274,6 +274,8 @@ const orderCommits = async (commits, tags, exists) => {
 	// Apply the `release.js` file or the one that
 	// was specified using the `--hook` flag
 	const filtered = await applyHook(flags.hook, changelog, {
+		githubConnection,
+		repoDetails,
 		changeTypes,
 		commits,
 		groupedCommits: grouped,
