@@ -98,11 +98,11 @@ In the example above, `markdown` contains the release as a `String` (if you just
 If you missed a release for a previous tag, you can `git reset` to it and then run `release`. You can create releases in batch for all of your tags with:
 
 ```sh
-# Unsaved changes will be lost. Push your changes to GitHub before running this
+# Unsaved changes might be lost. Push your changes to GitHub before running this
 for tag in $(git tag); do
-	git reset --hard $tag && release;
+	git checkout $tag && release;
 done
-git reset --hard origin/master
+git checkout origin/master
 ```
 
 Existing releases will automatically be skipped.
