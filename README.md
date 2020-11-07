@@ -95,7 +95,7 @@ In the example above, `markdown` contains the release as a `String` (if you just
 
 ## Creating past releases
 
-If you missed a release for a previous tag, you can `git reset` to it and then run `release`. You can create releases in batch for all of your tags with:
+If you missed a release for a previous tag, you can `git checkout` it and then run `release`. You can create releases in batch for all of your tags with:
 
 ```sh
 # Unsaved changes might be lost. Push your changes to GitHub before running this
@@ -105,7 +105,7 @@ done
 git checkout origin/master
 ```
 
-Existing releases will automatically be skipped.
+Existing releases will be left unchanged.
 
 ## Why?
 
