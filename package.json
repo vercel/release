@@ -1,6 +1,6 @@
 {
   "name": "release",
-  "version": "6.1.0",
+  "version": "6.3.0",
   "description": "Generate changelogs with a single command",
   "scripts": {
     "test": "yarn lint",
@@ -11,7 +11,7 @@
     "bin",
     "lib"
   ],
-  "repository": "zeit/release",
+  "repository": "vercel/release",
   "keywords": [
     "github",
     "releases",
@@ -45,7 +45,7 @@
     "git-username": "1.0.0",
     "github-username": "4.1.0",
     "inquirer": "5.2.0",
-    "node-fetch": "2.6.0",
+    "node-fetch": "2.6.1",
     "node-version": "1.1.3",
     "opn": "5.4.0",
     "ora": "2.0.0",
