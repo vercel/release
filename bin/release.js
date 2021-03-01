@@ -28,7 +28,9 @@ const applyHook = require('../lib/hook');
 // Throw an error if node version is too low
 if (nodeVersion.major < 6) {
 	console.error(
-		`${red('Error!')} Now requires at least version 6 of Node. Please upgrade!`
+		`${red(
+			'Error!'
+		)} Now requires at least version 6 of Node. Please upgrade!`
 	);
 	process.exit(1);
 }
@@ -38,8 +40,14 @@ args.option('pre', 'Mark the release as prerelease')
 	.option('publish', 'Instead of creating a draft, publish the release')
 	.option(['H', 'hook'], 'Specify a custom file to pipe releases through')
 	.option(['t', 'previous-tag'], 'Specify previous release', '')
-	.option(['u', 'show-url'], 'Show the release URL instead of opening it in the browser')
-	.option(['s', 'skip-questions'], 'Skip the questions and create a simple list without the headings');
+	.option(
+		['u', 'show-url'],
+		'Show the release URL instead of opening it in the browser'
+	)
+	.option(
+		['s', 'skip-questions'],
+		'Skip the questions and create a simple list without the headings'
+	);
 
 const flags = args.parse(process.argv);
 
@@ -49,6 +57,9 @@ if (args.sub[0] === 'pre') {
 	flags.pre = true;
 }
 
+/**
+ * @type {import('@octokit/rest').Octokit}
+ */
 let githubConnection;
 let repoDetails;
 
@@ -90,7 +101,6 @@ const createRelease = async (tag, changelog, exists) => {
 	const method = `${methodPrefix}Release`;
 	const {pre, publish, showUrl} = flags;
 
-
 	const body = {
 		owner: repoDetails.user,
 		repo: repoDetails.repo,
@@ -129,10 +139,12 @@ const createRelease = async (tag, changelog, exists) => {
 	if (!showUrl) {
 		try {
 			open(releaseURL, {wait: false});
-			console.log(`\n${chalk.bold('Done!')} Opened release in browser...`);
+			console.log(
+				`\n${chalk.bold('Done!')} Opened release in browser...`
+			);
 
 			return;
-		// eslint-disable-next-line no-empty
+			// eslint-disable-next-line no-empty
 		} catch (err) {}
 	}
 
@@ -150,7 +162,10 @@ const orderCommits = async (commits, tags, exists) => {
 
 	for (const commit of commits.all) {
 		const defTitle = definitions.type(commit.title, changeTypes);
-		const defDescription = definitions.type(commit.description, changeTypes);
+		const defDescription = definitions.type(
+			commit.description,
+			changeTypes
+		);
 
 		const definition = defTitle || defDescription;
 
@@ -172,7 +187,9 @@ const orderCommits = async (commits, tags, exists) => {
 					continue;
 				}
 
-				const questionExists = questions.find(question => question.message === line);
+				const questionExists = questions.find(
+					question => question.message === line
+				);
 
 				if (questionExists) {
 					continue;
@@ -234,7 +251,9 @@ const orderCommits = async (commits, tags, exists) => {
 
 	if (choices && questions.length > 0) {
 		console.log(
-			`${chalk.green('!')} Please enter the type of change for each commit:\n`
+			`${chalk.green(
+				'!'
+			)} Please enter the type of change for each commit:\n`
 		);
 
 		answers = await inquirer.prompt(questions);
@@ -245,7 +264,9 @@ const orderCommits = async (commits, tags, exists) => {
 			}
 
 			const type = answers[answer];
-			const {message} = questions.find(question => question.name === answer);
+			const {message} = questions.find(
+				question => question.name === answer
+			);
 
 			answers[answer] = {
 				type,
@@ -263,7 +284,14 @@ const orderCommits = async (commits, tags, exists) => {
 
 	const results = Object.assign({}, predefined, answers);
 	const grouped = groupChanges(results, changeTypes);
-	const changes = await createChangelog(grouped, commits, changeTypes, flags.skipQuestions, flags.hook, flags.showUrl);
+	const changes = await createChangelog(
+		grouped,
+		commits,
+		changeTypes,
+		flags.skipQuestions,
+		flags.hook,
+		flags.showUrl
+	);
 
 	let {credits, changelog} = changes;
 
@@ -340,7 +368,7 @@ const checkReleaseStatus = async () => {
 	let response;
 
 	try {
-		response = await githubConnection.repos.getReleases({
+		response = await githubConnection.repos.listReleases({
 			owner: repoDetails.user,
 			repo: repoDetails.repo
 		});
@@ -390,7 +418,7 @@ const checkReleaseStatus = async () => {
 			console.error(`${prefix}. Opened in browser...`);
 
 			return;
-		// eslint-disable-next-line no-empty
+			// eslint-disable-next-line no-empty
 		} catch (err) {}
 	}
 
@@ -425,7 +453,7 @@ const main = async () => {
 		if (!allowed) {
 			fail(
 				'Version type not SemVer-compatible ' +
-          '("major", "minor", "patch" or "pre")'
+					'("major", "minor", "patch" or "pre")'
 			);
 		}
 
