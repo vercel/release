@@ -4,14 +4,11 @@
   <img src="https://img.shields.io/badge/MADE%20BY%20Vercel-000000.svg?style=for-the-badge&logo=vercel&labelColor=000000&logoWidth=20">
 </a>
 
-[![Build Status](https://circleci.com/gh/vercel/release.svg?&style=shield)](https://circleci.com/gh/vercel/release)
-[![Join the community on GitHub Discussions](https://img.shields.io/badge/Join%20the%20community-blueviolet.svg?style=for-the-badge&logo=vercel&labelColor=000000&logoWidth=20)](https://github.com/vercel/vercel/discussions)
-
-When run, this command line interface automatically generates a new [GitHub Release](https://help.github.com/articles/creating-releases/) and populates it with the changes (commits) made since the last release.
+Release is a command line tool to automatically generate a new [GitHub Release](https://help.github.com/articles/creating-releases/) and populates it with the changes (commits) made since the last release.
 
 ## Usage
 
-Firstly, install the package from [npm](https://npmjs.com/release) (you'll need at least Node.js 7.6.0):
+Firstly, install the package from [npm](https://npmjs.com/release):
 
 ```bash
 npm install -g release
@@ -29,7 +26,7 @@ Once that's done, you can run this command inside your project's directory:
 release <type>
 ```
 
-As you can see, a `<type>` argument can be passed. If you leave it out, a [GitHub Release](https://help.github.com/articles/creating-releases/) will be created from the most recent commit and tag.
+A `<type>` argument can be passed. If you leave it out, a [GitHub Release](https://help.github.com/articles/creating-releases/) will be created from the most recent commit and tag.
 
 According to the [SemVer](https://semver.org) spec, the argument can have one of these values:
 
@@ -118,4 +115,4 @@ Thanks a lot to [Daniel Chatfield](https://github.com/danielchatfield) for donat
 
 ## Author
 
-Leo Lamprecht ([@notquiteleo](https://twitter.com/notquiteleo)) - [Vercel](https://vercel.com)
+Leo Lamprecht ([@notquiteleo](https://twitter.com/notquiteleo))
