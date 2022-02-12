@@ -1,8 +1,8 @@
-![](https://raw.githubusercontent.com/vercel/art/e0348ab1848337de87ccbb713fa33345aa0ba153/release/repo-banner.png)
-
 <a aria-label="Vercel logo" href="https://vercel.com">
   <img src="https://img.shields.io/badge/MADE%20BY%20Vercel-000000.svg?style=for-the-badge&logo=vercel&labelColor=000000&logoWidth=20">
 </a>
+
+# Release
 
 Release is a command line tool to automatically generate a new [GitHub Release](https://help.github.com/articles/creating-releases/) and populates it with the changes (commits) made since the last release.
 
