@@ -50,7 +50,7 @@
     "opn": "5.4.0",
     "ora": "2.0.0",
     "random-string": "0.2.0",
-    "semver": "5.5.0",
+    "semver": "5.7.2",
     "tagged-versions": "1.3.0",
     "update-check": "1.3.2"
   },
