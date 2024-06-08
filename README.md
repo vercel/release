@@ -115,4 +115,4 @@ Thanks a lot to [Daniel Chatfield](https://github.com/danielchatfield) for donat
 
 ## Author
 
-Leo Lamprecht ([@notquiteleo](https://twitter.com/notquiteleo))
+Leo Lamprecht ([@leo](https://x.com/leo))
