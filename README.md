@@ -70,20 +70,23 @@ To pre-define that a commit should be excluded from the list, you can use this k
 
 ## Custom Hook
 
-Sometimes you might want to filter the information that gets inserted into new releases by adding an intro text, replacing certain data or just changing the order of the changes.
+Sometimes you may want to apply the new version number to a file in the project, or you may want to replace the text in the Github Release.
 
 With a custom hook, the examples above (and many more) are very easy to accomplish:
 
-By default, release will look for a file named `release.js` in the root directory of your project. This file should export a function with two parameters and always return a `String` (the final release):
+By default, release will look for a file named `release.js` in the root directory of your project. This file supports two exported functions as hooks:
 
 ```js
-module.exports = async (markdown, metaData) => {
+exports.createTagBefore = async (version) => {
+	// For example, modify the version number of the manifest.json of the browser extension
+};
+exports.createReleaseBefore = async (markdown, metaData) => {
 	// Use the available data to create a custom release
 	return markdown;
 };
 ```
 
-In the example above, `markdown` contains the release as a `String` (if you just want to replace something). In addition, `metaData` contains these properties:
+In the example above, `version` is the version number string to be released, `markdown` contains the release as a `String` (if you just want to replace something). In addition, `metaData` contains these properties:
 
 | Property Name    | Content                                               |
 | ---------------- | ----------------------------------------------------- |
@@ -92,7 +95,9 @@ In the example above, `markdown` contains the release as a `String` (if you just
 | `groupedCommits` | Similar to `commits`, but grouped by the change types |
 | `authors`        | The GitHub usernames of the release collaborators     |
 
-**Hint:** You can specify a custom location for the hook file using the `--hook` or `-H` flag, which takes in a path relative to the current working directory.
+**Hint1:** You can specify a custom location for the hook file using the `--hook` or `-H` flag, which takes in a path relative to the current working directory.
+
+**Hint2:** The default function exported by the hook file is used as `createReleaseBefore`.
 
 ## Why?
 
