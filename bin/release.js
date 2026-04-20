@@ -23,7 +23,7 @@ const createChangelog = require('../lib/changelog');
 const {fail, create: createSpinner} = require('../lib/spinner');
 const bumpVersion = require('../lib/bump');
 const pkg = require('../package');
-const applyHook = require('../lib/hook');
+const {createReleaseBeforeHook} = require('../lib/hook');
 
 // Throw an error if node version is too low
 if (nodeVersion.major < 6) {
@@ -271,9 +271,7 @@ const orderCommits = async (commits, tags, exists) => {
 		changelog = 'Initial release';
 	}
 
-	// Apply the `release.js` file or the one that
-	// was specified using the `--hook` flag
-	const filtered = await applyHook(flags.hook, changelog, {
+	const filtered = await createReleaseBeforeHook(flags.hook, changelog, {
 		githubConnection,
 		repoDetails,
 		changeTypes,
@@ -429,7 +427,7 @@ const main = async () => {
 			);
 		}
 
-		await bumpVersion(type, bumpType[1]);
+		await bumpVersion(flags.hook, type, bumpType[1]);
 	}
 
 	checkReleaseStatus();
