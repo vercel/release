@@ -4,8 +4,8 @@
   "description": "Generate changelogs with a single command",
   "scripts": {
     "test": "pnpm lint",
-    "lint": "eslint --ext .jsx,.js .",
-    "lint-staged": "git diff --diff-filter=ACMRT --cached --name-only '*.js' '*.jsx' | xargs -r eslint"
+    "lint": "zeit-eslint --ext .jsx,.js .",
+    "lint-staged": "git diff --diff-filter=ACMRT --cached --name-only '*.js' '*.jsx' | xargs -r zeit-eslint"
   },
   "files": [
     "bin",
@@ -26,6 +26,7 @@
     "release": "./bin/release.js"
   },
   "devDependencies": {
+    "@zeit/eslint-config-base": "0.2.13",
     "@zeit/eslint-config-node": "0.2.13",
     "@zeit/git-hooks": "0.1.4",
     "eslint": "4.19.1"
