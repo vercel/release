@@ -14,10 +14,10 @@ Firstly, install the package from [npm](https://npmjs.com/release):
 npm install -g release
 ```
 
-Alternatively, you can use [Yarn](https://yarnpkg.com/en/) to install it:
+Alternatively, you can use [pnpm](https://pnpm.io/) to install it:
 
 ```bash
-yarn global add release
+pnpm add -g release
 ```
 
 Once that's done, you can run this command inside your project's directory:
