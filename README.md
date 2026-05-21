@@ -107,7 +107,7 @@ You can find the authentication flow [here](https://github.com/vercel/release-au
 3. Link the package to the global module directory: `npm link`
 4. You can now use `release` on the command line!
 
-As always, you can use `npm test` to run the tests and see if your changes have broken anything.
+As always, you can use `pnpm test` to run the tests and see if your changes have broken anything.
 
 ## Credits
 

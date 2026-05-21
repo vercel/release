@@ -2,24 +2,26 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:latest
+      - image: cimg/node:22.11
 
     working_directory: ~/repo
 
     steps:
       - checkout
 
+      - run: corepack enable pnpm
+
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
+          - v1-pnpm-{{ checksum "pnpm-lock.yaml" }}
           # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+          - v1-pnpm-
 
-      - run: yarn
+      - run: pnpm install --frozen-lockfile
 
       - save_cache:
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+            - ~/.local/share/pnpm/store
+          key: v1-pnpm-{{ checksum "pnpm-lock.yaml" }}
 
-      - run: yarn test
+      - run: pnpm test
